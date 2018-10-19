@@ -161,6 +161,13 @@ public:
     /** Polls the events. */
     virtual void pollEvents();
 
+	// chenguobao
+	virtual void setFullscreen() {}
+	virtual void setWindowed(int width, int height) {}
+	virtual Size getMonitorSize() const { return Size::ZERO; }
+
+	// chenguobao
+
     /**
      * Get the frame size of EGL view.
      * In general, it returns the screen size since the EGL view is a fullscreen view.

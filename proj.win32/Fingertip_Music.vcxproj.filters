@@ -27,6 +27,18 @@
     <ClCompile Include="..\Classes\HelloWorldScene.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\StartScene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\MainGameScene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SettingScene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\AboutScene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -38,33 +50,22 @@
     <ClInclude Include="..\Classes\HelloWorldScene.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\StartScene.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\MainGameScene.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SettingScene.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\AboutScene.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">
       <Filter>resource</Filter>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\Resources\aoba.jpg">
-      <Filter>图片资源</Filter>
-    </Image>
-    <Image Include="..\Resources\CloseNormal.png">
-      <Filter>图片资源</Filter>
-    </Image>
-    <Image Include="..\Resources\CloseSelected.png">
-      <Filter>图片资源</Filter>
-    </Image>
-    <Image Include="..\Resources\HelloWorld.png">
-      <Filter>图片资源</Filter>
-    </Image>
-    <Image Include="..\Resources\nene.jpeg">
-      <Filter>图片资源</Filter>
-    </Image>
-    <Image Include="..\Resources\tossgril_sunyiphone.jpg">
-      <Filter>图片资源</Filter>
-    </Image>
-    <Image Include="..\Resources\red.png">
-      <Filter>图片资源</Filter>
-    </Image>
   </ItemGroup>
 </Project>
