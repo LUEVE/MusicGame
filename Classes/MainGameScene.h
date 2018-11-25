@@ -4,8 +4,8 @@
 #include "cocos2d.h"
 #include <string>
 #include "ui/CocosGUI.h"
+#include "Block/SG_Game.h"
 using namespace std;
-using namespace cocos2d::ui;
 class MainGameScene : public cocos2d::Scene
 {
 public:
@@ -14,9 +14,10 @@ public:
 	virtual bool init();
 
 	void btnBackCallback(Ref * pSender);
-	void try_fuck();
 
 	CREATE_FUNC(MainGameScene);
+
+	SG_Game game;
 };
 
 #endif // __MAINGAME_SCENE_H__

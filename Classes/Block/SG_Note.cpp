@@ -1,8 +1,8 @@
 ﻿#include "Block/SG_Note.h"
 
-Sprite* SG_Note::create(const string& filename, const Rect& rect)
+SG_Note* SG_Note::create(const string& filename, const Rect& rect)
 {
-	Sprite *sprite = new (std::nothrow) SG_Note;
+	SG_Note *sprite = new (std::nothrow) SG_Note();
 	if (sprite && sprite->initWithFile(filename,rect))
 	{
 		sprite->autorelease();
@@ -11,9 +11,9 @@ Sprite* SG_Note::create(const string& filename, const Rect& rect)
 	CC_SAFE_DELETE(sprite);
 	return nullptr;
 }
-Sprite* SG_Note::create(const string& filename)
+SG_Note* SG_Note::create(const string& filename)
 {
-	Sprite *sprite = new (std::nothrow) SG_Note;
+	SG_Note *sprite = new (std::nothrow) SG_Note();
 	if (sprite && sprite->initWithFile(filename))
 	{
 		sprite->autorelease();

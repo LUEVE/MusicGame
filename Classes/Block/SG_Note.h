@@ -8,9 +8,9 @@ using namespace cocos2d;
 class SG_Note : public Sprite
 {
 public:
-	static Sprite* create(const string &filename,const Rect& rect);
-	static Sprite* create(const string &filename);
-	static Sprite* create(const string &filename,Scene*father);
+	static SG_Note* create(const string &filename,const Rect& rect);
+	static SG_Note* create(const string &filename);
+	static SG_Note* create(const string &filename,Scene*father);
 	//
 	string get_color();
 	int get_shape();
