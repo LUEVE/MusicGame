@@ -6,8 +6,28 @@ USING_NS_CC;
 
 Scene* MainGameScene::createScene()
 {
+
 	return MainGameScene::create();
 }
+
+Vector<Sprite*> AllSpirtInASong(6);
+
+int timeFlag = 0;
+
+bool MainGameScene::CreatAllSpirtInSong()
+{
+	for (int i = 1; i <= 5; ++i)
+	{
+		char a = (char)i % 2 + '1';
+		string PictureName = "Note";
+		PictureName = PictureName+ a + ".png";
+		auto tempNote = SG_Note::create(PictureName);
+		//this->addChild(tempNote);
+		AllSpirtInASong.pushBack(tempNote);
+	}
+	return true;
+}
+
 
 bool MainGameScene::init()
 {
@@ -17,15 +37,39 @@ bool MainGameScene::init()
 	}
 
 	// lyw 2018年10月20日01:00:52
+	
+	//自定义帧执行器 
+
+	auto tryT = CallFuncN::create([=](Ref* sender) {
+		log("fuck");
+	});
+	
+	auto scheduler = Director::getInstance()->getScheduler();
+	//int i = 10;
+//	scheduler->schedule(CC_CALLBACK_0(MainGameScene::try_fuck,this,&i)),0.2f,kRepeatForever,0);
+	//auto scheduler = Director::getInstance()->getScheduler();
+	int i = 10;
+	string name = "sssss";
+	scheduler->schedule(CC_CALLBACK_1(MainGameScene::try_fuck2, this, i, name), this, 0.1f, -1, 0, false,"fuck1");
 
 
-	auto notefly = SG_Note::create("white.jpg");
+	//schedule(schedule_selector(MainGameScene::try_fuck), 0.2f, kRepeatForever, 0);
+
+	CreatAllSpirtInSong();
+
+	auto tryV =  AllSpirtInASong.at(2);
+	//tryV->setPosition(Vec2(500, 500));
+	//this->addChild(tryV);
+
+	auto notefly = SG_Note::create("NoteResources/white.jpg");
 	notefly->setPosition(Vec2(300, 300));
 	this->addChild(notefly);
 
-	auto judgePlace = SG_Note::create("red.png");
+	auto judgePlace = SG_Note::create("NoteResources/red.png");
 	judgePlace->setPosition(Vec2(500, 300));
 	this->addChild(judgePlace);
+
+	
 	// 移动
 	auto move1 = MoveBy::create(0.1, Vec2(20, 0));
 	auto move1F = RepeatForever::create(move1);
@@ -46,7 +90,7 @@ bool MainGameScene::init()
 	float judgeX = judgePlace->getPosition().x;
 	float judgeY = judgePlace->getPosition().y;
 
-
+	// 键盘
 	listen1->onKeyPressed = [=](EventKeyboard::KeyCode keyCode, Event * event) {
 		//log("KeyPress:%d", keyCode);
 		log("%d", notefly);
@@ -75,6 +119,7 @@ bool MainGameScene::init()
 		else { log("false\n"); }
 
 		mainsprite->setVisible(true);
+
 		auto actionMoveDone = CallFuncN::create([=](Ref* sender) {
 			mainsprite->stopAllActions();
 			mainsprite->setVisible(false);
@@ -93,7 +138,7 @@ bool MainGameScene::init()
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
 	auto button = Button::create("back.png", "back_selected.png", "back_disabled.png");
-
+	
 	button->setPosition(Vec2(100, 50));
 	button->addClickEventListener(CC_CALLBACK_1(MainGameScene::btnBackCallback, this));
 
@@ -107,7 +152,48 @@ void MainGameScene::btnBackCallback(Ref* pSender)
 	Director::getInstance()->popScene();
 }
 
-void MainGameScene::try_fuck()
+void MainGameScene::try_fuck(float dt)
 {
-	log("1");
+	//timeFlag++;
+	//log("%d",timeFlag);
+	
+}
+// lyw
+int SFlag = 0;
+
+
+//--lyw
+void MainGameScene::try_fuck2(float t, int data, string name)
+{
+	timeFlag++;
+	int i = data;
+	log("%s", name.c_str());
+	log("%d", i);
+	if (timeFlag % 10 == 0)
+	{
+		//SFlag++;
+		//auto newSpirt = AllSpirtInASong.at(SFlag % 2);
+		//newSpirt->setPosition(10 * timeFlag / 10, 300);
+		//addChild(newSpirt, 10);
+		//log("s", this);
+		changeSpirt();
+	};
+}
+
+
+void MainGameScene::changeSpirt()
+{
+	if (timeFlag % 10 == 0)
+	{
+		if (SFlag > 4)
+		{
+			return;
+		}
+		
+		auto newSpirt = AllSpirtInASong.at(SFlag);
+		newSpirt->setPosition(10 * timeFlag/10,300);
+		addChild(newSpirt,10);
+		SFlag++;
+	}
+	
 }
