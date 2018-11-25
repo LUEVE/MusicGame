@@ -43,16 +43,37 @@ void MainGameScene::update(float dt)
 			{
 				(*it)->removeFromParent();
 				it = vec.erase(it);
-				flag = 0;
+				this->comboNumber = 0;
 				comboNumberLabel->removeFromParent();
-				this->comboNumberLabel = Label::createWithSystemFont(to_string(flag), "Arial", 30);
+				this->comboNumberLabel = Label::createWithSystemFont(to_string(this->comboNumber), "Arial", 30);
 				this->comboNumberLabel->setPosition(Vec2(visibleSize.width / 6 * 4 + 100, visibleSize.height / 6 * 1));
 				this->addChild(comboNumberLabel);
 			}
 			else it++;
 		}
 	}
-	
+	// 改变combo状态
+	if(comboNumber < 3)
+	{
+		comboPlace->removeFromParent();
+		comboPlace = SG_Note::create("combo1.PNG");
+		comboPlace->setPosition(Vec2(visibleSize.width / 6 * 4, visibleSize.height / 6 * 1));
+		this->addChild(comboPlace);
+	}
+	else if(comboNumber >= 3 && comboNumber <= 5)
+	{
+		comboPlace->removeFromParent();
+		comboPlace = SG_Note::create("combo2.PNG");
+		comboPlace->setPosition(Vec2(visibleSize.width / 6 * 4, visibleSize.height / 6 * 1));
+		this->addChild(comboPlace);
+	}
+	else
+	{
+		comboPlace->removeFromParent();
+		comboPlace = SG_Note::create("combo3.PNG");
+		comboPlace->setPosition(Vec2(visibleSize.width / 6 * 4, visibleSize.height / 6 * 1));
+		this->addChild(comboPlace);
+	}
 
 }
 
@@ -92,7 +113,7 @@ bool MainGameScene::init()
 	this->comboNumber = 0;
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	// combo区
-	auto comboPlace = SG_Note::create("comebo.PNG");
+	comboPlace = SG_Note::create("combo1.PNG");
 	comboPlace->setPosition(Vec2(visibleSize.width / 6 * 4, visibleSize.height / 6 * 1));
 	this->addChild(comboPlace);
 	string s_comboNumber = to_string(comboNumber);
@@ -137,44 +158,48 @@ bool MainGameScene::init()
 			auto &vec = game.notes[which];
 			bool judgeFlag = false;
 			for (auto it = vec.begin(); it != vec.end(); ) {
-				//if ((*it)->getPositionY() < 0)
-				//{
-				//	(*it)->removeFromParent();
-				//	it = vec.erase(it);
-				//	flag = 0;
-				//}
-				 if (dist((*it)->getPosition(), judges[which]->getPosition()) <= 100)
+				 if (dist((*it)->getPosition(), judges[which]->getPosition()) <= 100 && dist((*it)->getPosition(), judges[which]->getPosition()) >=50)
 				{
 					
 					auto animation = Animation::create();
-					animation->addSpriteFrameWithFile("Fuck1.png");
-					animation->addSpriteFrameWithFile("Fuck2.png");
-					animation->addSpriteFrameWithFile("Fuck3.png");
-					animation->setRestoreOriginalFrame(true);
-					animation->setDelayPerUnit(0.1f);//设置动画的间隔时间
-
-													 // judges[which]->setSpriteFrame(SpriteFrame::create("red.png", Rect(0, 0, 47, 46)));
-
-													 // auto original = Animation::create();
-													 // original->addSpriteFrameWithFile("red.png");
-													 // original->setRestoreOriginalFrame(false);
-													 // original->setDelayPerUnit(0);
-													 // judges[which]->runAction(Sequence::create(Animate::create(original), nullptr));
-
+					setJudgeAnimation(animation,3);
 					auto action = Animate::create(animation);
-					// action->initWithAnimation(original);
-					// judges[which]->stopAllActions();
 					judges[which]->runAction(Sequence::create(action, nullptr));
-
 					(*it)->removeFromParent();
-
 					it = vec.erase(it);
 					// lyw 计数combo
-					flag++;
-					judgeFlag = true;
+					this->comboNumber++;
+				 	judgeFlag = true;
 					break;
 
 				}
+				 else if(dist((*it)->getPosition(), judges[which]->getPosition()) < 50 && dist((*it)->getPosition(), judges[which]->getPosition()) >= 25)
+				 {
+					 auto animation = Animation::create();
+					 setJudgeAnimation(animation,2);
+					 auto action = Animate::create(animation);
+					 judges[which]->runAction(Sequence::create(action, nullptr));
+					 (*it)->removeFromParent();
+					 it = vec.erase(it);
+					 // lyw 计数combo
+					 this->comboNumber++;
+					 judgeFlag = true;
+					 break;
+				 }
+				 else if ( dist((*it)->getPosition(), judges[which]->getPosition()) < 25)
+				 {
+					 auto animation = Animation::create();
+					 setJudgeAnimation(animation,1);
+					 auto action = Animate::create(animation);
+					 
+					 judges[which]->runAction(Sequence::create(action, nullptr));
+					 (*it)->removeFromParent();
+					 it = vec.erase(it);
+					 // lyw 计数combo
+					 this->comboNumber++;
+					 judgeFlag = true;
+					 break;
+				 }
 				 else
 				 {
 					
@@ -188,10 +213,10 @@ bool MainGameScene::init()
 			}
 			if (judgeFlag == false)
 			{
-				flag = 0;
+				this->comboNumber = 0;
 			}
 			comboNumberLabel->removeFromParent();
-			this->comboNumberLabel = Label::createWithSystemFont(to_string(flag), "Arial", 30);
+			this->comboNumberLabel = Label::createWithSystemFont(to_string(this->comboNumber), "Arial", 30);
 			this->comboNumberLabel->setPosition(Vec2(visibleSize.width / 6 * 4 + 100, visibleSize.height / 6 * 1));
 			this->addChild(comboNumberLabel);
 		};
@@ -243,3 +268,24 @@ void MainGameScene::btnBackCallback(Ref* pSender)
 	Director::getInstance()->popScene();
 }
 
+void MainGameScene::setJudgeAnimation(Animation* animation,int i)
+{
+	string judge;
+	if (i == 3)
+	{
+		judge = "good";
+	}
+	else if(i == 2)
+	{
+		judge = "great";
+	}
+	else
+	{
+		judge = "perfect";
+	}
+	animation->addSpriteFrameWithFile(judge+"1.png");
+	animation->addSpriteFrameWithFile(judge+"2.png");
+	animation->addSpriteFrameWithFile(judge+"3.png");
+	animation->setRestoreOriginalFrame(true);
+	animation->setDelayPerUnit(0.1f);//设置动画的间隔时间
+}

@@ -15,9 +15,10 @@ public:
 	virtual bool init();
 
 	void btnBackCallback(Ref * pSender);
+	void setJudgeAnimation(Animation* animation, int i);
 	void update(float dt);
 	cocos2d::Label*comboNumberLabel;
-
+	SG_Note* comboPlace;
 	CREATE_FUNC(MainGameScene);
 
 	SG_Game game;
