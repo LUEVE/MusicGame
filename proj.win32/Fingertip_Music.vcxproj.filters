@@ -39,6 +39,9 @@
     <ClCompile Include="..\Classes\AboutScene.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Block\SG_Note.cpp">
+      <Filter>src\block</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -62,10 +65,21 @@
     <ClInclude Include="..\Classes\AboutScene.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\Block\SG_Note.h">
+      <Filter>src\block</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">
       <Filter>resource</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Resources\f91.jpg">
+      <Filter>图片资源</Filter>
+    </Image>
+    <Image Include="..\Resources\white.jpg">
+      <Filter>图片资源</Filter>
+    </Image>
   </ItemGroup>
 </Project>

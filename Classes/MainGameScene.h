@@ -1,4 +1,4 @@
-#ifndef __MAINGAME_SCENE_H__
+﻿#ifndef __MAINGAME_SCENE_H__
 #define __MAINGAME_SCENE_H__
 #include <iostream>
 #include "cocos2d.h"
@@ -14,6 +14,7 @@ public:
 	virtual bool init();
 
 	void btnBackCallback(Ref * pSender);
+	void try_fuck();
 
 	CREATE_FUNC(MainGameScene);
 };

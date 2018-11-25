@@ -1,4 +1,4 @@
-#include "AboutScene.h"
+﻿#include "AboutScene.h"
 #include "SimpleAudioEngine.h"
 
 USING_NS_CC;
@@ -14,7 +14,7 @@ bool AboutScene::init()
 	{
 		return false;
 	}
-
+	
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
