@@ -8,7 +8,8 @@ USING_NS_CC;
 class SG_Game
 {
 public:
-	std::vector<SG_Note*> notes;
+	const static int WAYS = 4;
+	std::vector<std::vector<SG_Note*>> notes;
 	SG_Game();
 private:
 

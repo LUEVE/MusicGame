@@ -12,7 +12,27 @@ Scene* MainGameScene::createScene()
 
 Vector<Sprite*> AllSpirtInASong(6);
 
-int timeFlag = 0;
+
+void MainGameScene::update(float dt)
+{
+	static mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+	static uniform_int_distribution<int> genProb(1, 100), genPos(0, SG_Game::WAYS - 1), genSpeed(10, 50);
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	if (genProb(rng) <= 2)
+	{
+		SG_Note* newNote = SG_Note::create("white.jpg");
+		int pos = genPos(rng);
+		newNote->setPosition(Vec2(visibleSize.width / 4 * pos + 100, 700));
+
+		auto moveD = MoveBy::create(0.1, Vec2(0, -genSpeed(rng)));
+		auto fall = RepeatForever::create(moveD);
+		newNote->runAction(fall);
+
+		this->addChild(newNote);
+
+		game.notes[pos].push_back(newNote);
+	}
+}
 
 bool MainGameScene::CreatAllSpirtInSong()
 {
@@ -28,6 +48,7 @@ bool MainGameScene::CreatAllSpirtInSong()
 	return true;
 }
 
+
 static float sqr(float x)
 {
 	return x * x;
@@ -38,54 +59,66 @@ static float dist(const Vec2 &a, const Vec2 &b)
 	return sqrt(sqr(a.x - b.x) + sqr(a.y - b.y));
 }
 
+
 bool MainGameScene::init()
 {
 	if (!Scene::init())
 	{
 		return false;
 	}
-	
-	auto visibleSize = Director::getInstance()->getVisibleSize();
 
+	this->comboNumber = 0;
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	// combo区
+	auto comboPlace = SG_Note::create("comebo.PNG");
+	comboPlace->setPosition(Vec2(visibleSize.width / 6 * 4, visibleSize.height / 6 * 1));
+	this->addChild(comboPlace);
+	auto myLabel = Label::createWithSystemFont("999", "Arial", 30);
+	myLabel->setPosition(Vec2(visibleSize.width / 6 * 4 + 100, visibleSize.height / 6 * 1));
+	this->addChild(myLabel);
+
+
+	// 判断区
 	vector<Sprite*> judges = {SG_Note::create("red.png"), SG_Note::create("red.png"),
 		SG_Note::create("red.png"), SG_Note::create("red.png")};
+	
 	for (int i = 0; i < judges.size(); ++i) // initialize judges
 	{
 		judges[i]->setPosition(Vec2(visibleSize.width / 4 * i + 100, 200));
 		this->addChild(judges[i]);
 	}
 
-	game.notes.push_back(SG_Note::create("white.jpg"));
-	game.notes.push_back(SG_Note::create("white.jpg"));
-	game.notes.push_back(SG_Note::create("white.jpg"));
-	game.notes.push_back(SG_Note::create("white.jpg"));
-	for (int i = 0; i < game.notes.size(); ++i) // initialize notes
+	// 掉落块
+
+	game.notes[0].push_back(SG_Note::create("white.jpg"));
+	game.notes[1].push_back(SG_Note::create("white.jpg"));
+	game.notes[2].push_back(SG_Note::create("white.jpg"));
+	game.notes[3].push_back(SG_Note::create("white.jpg"));
+	for (int i = 0; i < SG_Game::WAYS; ++i) // initialize notes
 	{
-		game.notes[i]->setPosition(Vec2(visibleSize.width / 4 * i + 100, 700));
+		game.notes[i].front()->setPosition(Vec2(visibleSize.width / 4 * i + 100, 700));
 		auto moveD = MoveBy::create(0.1, Vec2(0, -20));
 		auto fall = RepeatForever::create(moveD);
-		game.notes[i]->runAction(fall);
-		this->addChild(game.notes[i]);
+		game.notes[i].front()->runAction(fall);
+		this->addChild(game.notes[i].front());
 	}
 
-	// auto mainsprite = Sprite::create("Fuck1.png");
-	// mainsprite->setPosition(Vec2(500, 300));
-	// this->addChild(mainsprite);
-	// log("%lf",mainsprite->getPosition().x);
-
-
-	// mainsprite->setVisible(false);
-
+	// 键盘事件
 	auto listen1 = EventListenerKeyboard::create();
+
 	listen1->onKeyPressed = [=](EventKeyboard::KeyCode keyCode, Event * event) {
 		// log("KeyPress:%d", keyCode);
 		// log("%d", notefly);
 		auto checkNote = [&](int which)
 		{
-			for (auto it = game.notes.begin(); it != game.notes.end(); )
-			{
-				auto &note = *it;
-				if (dist(note->getPosition(), judges[which]->getPosition()) <= 20)
+			auto &vec = game.notes[which];
+			for (auto it = vec.begin(); it != vec.end(); ) {
+				if ((*it)->getPositionY() < 0)
+				{
+					(*it)->removeFromParent();
+					it = vec.erase(it);
+				}
+				else if (dist((*it)->getPosition(), judges[which]->getPosition()) <= 20)
 				{
 					auto animation = Animation::create();
 					animation->addSpriteFrameWithFile("Fuck1.png");
@@ -94,12 +127,22 @@ bool MainGameScene::init()
 					animation->setRestoreOriginalFrame(true);
 					animation->setDelayPerUnit(0.1f);//设置动画的间隔时间
 
+													 // judges[which]->setSpriteFrame(SpriteFrame::create("red.png", Rect(0, 0, 47, 46)));
+
+													 // auto original = Animation::create();
+													 // original->addSpriteFrameWithFile("red.png");
+													 // original->setRestoreOriginalFrame(false);
+													 // original->setDelayPerUnit(0);
+													 // judges[which]->runAction(Sequence::create(Animate::create(original), nullptr));
+
 					auto action = Animate::create(animation);
-					judges[which]->runAction(Sequence::create(action, NULL));
+					// action->initWithAnimation(original);
+					// judges[which]->stopAllActions();
+					judges[which]->runAction(Sequence::create(action, nullptr));
 
 					(*it)->removeFromParent();
 
-					it = game.notes.erase(it);
+					it = vec.erase(it);
 				}
 				else ++it;
 			}
@@ -129,7 +172,7 @@ bool MainGameScene::init()
 		}
 	};
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listen1, this);
-	
+
 
 	// lyw--
 
@@ -142,6 +185,8 @@ bool MainGameScene::init()
 
 	this->addChild(button);
 
+	scheduleUpdate();
+
 	return true;
 }
 
@@ -150,48 +195,3 @@ void MainGameScene::btnBackCallback(Ref* pSender)
 	Director::getInstance()->popScene();
 }
 
-void MainGameScene::try_fuck(float dt)
-{
-	//timeFlag++;
-	//log("%d",timeFlag);
-	
-}
-// lyw
-int SFlag = 0;
-
-
-//--lyw
-void MainGameScene::try_fuck2(float t, int data, string name)
-{
-	timeFlag++;
-	int i = data;
-	log("%s", name.c_str());
-	log("%d", i);
-	if (timeFlag % 10 == 0)
-	{
-		//SFlag++;
-		//auto newSpirt = AllSpirtInASong.at(SFlag % 2);
-		//newSpirt->setPosition(10 * timeFlag / 10, 300);
-		//addChild(newSpirt, 10);
-		//log("s", this);
-		changeSpirt();
-	};
-}
-
-
-void MainGameScene::changeSpirt()
-{
-	if (timeFlag % 10 == 0)
-	{
-		if (SFlag > 4)
-		{
-			return;
-		}
-		
-		auto newSpirt = AllSpirtInASong.at(SFlag);
-		newSpirt->setPosition(10 * timeFlag/10,300);
-		addChild(newSpirt,10);
-		SFlag++;
-	}
-	
-}

@@ -15,15 +15,13 @@ public:
 	virtual bool init();
 
 	void btnBackCallback(Ref * pSender);
+	void update(float dt);
 	
-
-	void try_fuck2(float t, int data, std::string name);
-	//void try_fuck2(float t, void* data, std::string name);
-	void changeSpirt();
 
 	CREATE_FUNC(MainGameScene);
 
 	SG_Game game;
+	int comboNumber = 0;
 };
 
 #endif // __MAINGAME_SCENE_H__
