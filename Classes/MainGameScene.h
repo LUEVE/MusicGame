@@ -16,7 +16,7 @@ public:
 
 	void btnBackCallback(Ref * pSender);
 	void update(float dt);
-	
+	cocos2d::Label*comboNumberLabel;
 
 	CREATE_FUNC(MainGameScene);
 

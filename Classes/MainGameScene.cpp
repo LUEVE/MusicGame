@@ -12,11 +12,13 @@ Scene* MainGameScene::createScene()
 
 Vector<Sprite*> AllSpirtInASong(6);
 
+int flag = 0;
 
 void MainGameScene::update(float dt)
 {
+	
 	static mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-	static uniform_int_distribution<int> genProb(1, 100), genPos(0, SG_Game::WAYS - 1), genSpeed(10, 50);
+	static uniform_int_distribution<int> genProb(1, 100), genPos(0, SG_Game::WAYS - 1), genSpeed(10,20);
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	if (genProb(rng) <= 2)
 	{
@@ -32,6 +34,26 @@ void MainGameScene::update(float dt)
 
 		game.notes[pos].push_back(newNote);
 	}
+
+	for (int i = 0; i <= 3; ++i)
+	{
+		auto &vec = game.notes[i];
+		for (auto it = vec.begin(); it != vec.end(); ) {
+			if ((*it)->getPositionY() < 0)
+			{
+				(*it)->removeFromParent();
+				it = vec.erase(it);
+				flag = 0;
+				comboNumberLabel->removeFromParent();
+				this->comboNumberLabel = Label::createWithSystemFont(to_string(flag), "Arial", 30);
+				this->comboNumberLabel->setPosition(Vec2(visibleSize.width / 6 * 4 + 100, visibleSize.height / 6 * 1));
+				this->addChild(comboNumberLabel);
+			}
+			else it++;
+		}
+	}
+	
+
 }
 
 bool MainGameScene::CreatAllSpirtInSong()
@@ -73,9 +95,10 @@ bool MainGameScene::init()
 	auto comboPlace = SG_Note::create("comebo.PNG");
 	comboPlace->setPosition(Vec2(visibleSize.width / 6 * 4, visibleSize.height / 6 * 1));
 	this->addChild(comboPlace);
-	auto myLabel = Label::createWithSystemFont("999", "Arial", 30);
-	myLabel->setPosition(Vec2(visibleSize.width / 6 * 4 + 100, visibleSize.height / 6 * 1));
-	this->addChild(myLabel);
+	string s_comboNumber = to_string(comboNumber);
+	this->comboNumberLabel = Label::createWithSystemFont(s_comboNumber, "Arial", 30);
+	this->comboNumberLabel->setPosition(Vec2(visibleSize.width / 6 * 4 + 100, visibleSize.height / 6 * 1));
+	this->addChild(this->comboNumberLabel);
 
 
 	// 判断区
@@ -112,14 +135,17 @@ bool MainGameScene::init()
 		auto checkNote = [&](int which)
 		{
 			auto &vec = game.notes[which];
+			bool judgeFlag = false;
 			for (auto it = vec.begin(); it != vec.end(); ) {
-				if ((*it)->getPositionY() < 0)
+				//if ((*it)->getPositionY() < 0)
+				//{
+				//	(*it)->removeFromParent();
+				//	it = vec.erase(it);
+				//	flag = 0;
+				//}
+				 if (dist((*it)->getPosition(), judges[which]->getPosition()) <= 100)
 				{
-					(*it)->removeFromParent();
-					it = vec.erase(it);
-				}
-				else if (dist((*it)->getPosition(), judges[which]->getPosition()) <= 20)
-				{
+					
 					auto animation = Animation::create();
 					animation->addSpriteFrameWithFile("Fuck1.png");
 					animation->addSpriteFrameWithFile("Fuck2.png");
@@ -143,9 +169,31 @@ bool MainGameScene::init()
 					(*it)->removeFromParent();
 
 					it = vec.erase(it);
+					// lyw 计数combo
+					flag++;
+					judgeFlag = true;
+					break;
+
 				}
-				else ++it;
+				 else
+				 {
+					
+					 ++it;
+					
+				 }
+					// lyw count combo
+
+
+				
 			}
+			if (judgeFlag == false)
+			{
+				flag = 0;
+			}
+			comboNumberLabel->removeFromParent();
+			this->comboNumberLabel = Label::createWithSystemFont(to_string(flag), "Arial", 30);
+			this->comboNumberLabel->setPosition(Vec2(visibleSize.width / 6 * 4 + 100, visibleSize.height / 6 * 1));
+			this->addChild(comboNumberLabel);
 		};
 
 		switch (keyCode)
