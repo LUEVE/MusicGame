@@ -1,6 +1,6 @@
 ﻿#include "MainGameScene.h"
 #include "SimpleAudioEngine.h"
-//#include "Block/SG_BlockF91.h"
+// #include "Block/SG_BlockF91.h"
 #include "Block/SG_Note.h"
 USING_NS_CC;
 
@@ -28,6 +28,15 @@ bool MainGameScene::CreatAllSpirtInSong()
 	return true;
 }
 
+static float sqr(float x)
+{
+	return x * x;
+}
+
+static float dist(const Vec2 &a, const Vec2 &b)
+{
+	return sqrt(sqr(a.x - b.x) + sqr(a.y - b.y));
+}
 
 bool MainGameScene::init()
 {
@@ -35,100 +44,89 @@ bool MainGameScene::init()
 	{
 		return false;
 	}
-
-	// lyw 2018年10月20日01:00:52
 	
-	//自定义帧执行器 
+	auto visibleSize = Director::getInstance()->getVisibleSize();
 
-	auto tryT = CallFuncN::create([=](Ref* sender) {
-		log("fuck");
-	});
-	
-	auto scheduler = Director::getInstance()->getScheduler();
-	//int i = 10;
-//	scheduler->schedule(CC_CALLBACK_0(MainGameScene::try_fuck,this,&i)),0.2f,kRepeatForever,0);
-	//auto scheduler = Director::getInstance()->getScheduler();
-	int i = 10;
-	string name = "sssss";
-	scheduler->schedule(CC_CALLBACK_1(MainGameScene::try_fuck2, this, i, name), this, 0.1f, -1, 0, false,"fuck1");
+	vector<Sprite*> judges = {SG_Note::create("red.png"), SG_Note::create("red.png"),
+		SG_Note::create("red.png"), SG_Note::create("red.png")};
+	for (int i = 0; i < judges.size(); ++i) // initialize judges
+	{
+		judges[i]->setPosition(Vec2(visibleSize.width / 4 * i + 100, 200));
+		this->addChild(judges[i]);
+	}
 
+	game.notes.push_back(SG_Note::create("white.jpg"));
+	game.notes.push_back(SG_Note::create("white.jpg"));
+	game.notes.push_back(SG_Note::create("white.jpg"));
+	game.notes.push_back(SG_Note::create("white.jpg"));
+	for (int i = 0; i < game.notes.size(); ++i) // initialize notes
+	{
+		game.notes[i]->setPosition(Vec2(visibleSize.width / 4 * i + 100, 700));
+		auto moveD = MoveBy::create(0.1, Vec2(0, -20));
+		auto fall = RepeatForever::create(moveD);
+		game.notes[i]->runAction(fall);
+		this->addChild(game.notes[i]);
+	}
 
-	//schedule(schedule_selector(MainGameScene::try_fuck), 0.2f, kRepeatForever, 0);
-
-	CreatAllSpirtInSong();
-
-	auto tryV =  AllSpirtInASong.at(2);
-	//tryV->setPosition(Vec2(500, 500));
-	//this->addChild(tryV);
-
-	auto notefly = SG_Note::create("NoteResources/white.jpg");
-	notefly->setPosition(Vec2(300, 300));
-	this->addChild(notefly);
-
-	auto judgePlace = SG_Note::create("NoteResources/red.png");
-	judgePlace->setPosition(Vec2(500, 300));
-	this->addChild(judgePlace);
-
-	
-	// 移动
-	auto move1 = MoveBy::create(0.1, Vec2(20, 0));
-	auto move1F = RepeatForever::create(move1);
-	notefly->runAction(move1F);
-
-	//
-	
-	auto mainsprite = Sprite::create("Fuck1.png");
-	mainsprite->setPosition(Vec2(500, 300));
-	this->addChild(mainsprite);
-	log("%lf",mainsprite->getPosition().x);
+	// auto mainsprite = Sprite::create("Fuck1.png");
+	// mainsprite->setPosition(Vec2(500, 300));
+	// this->addChild(mainsprite);
+	// log("%lf",mainsprite->getPosition().x);
 
 
+	// mainsprite->setVisible(false);
 
-	mainsprite->setVisible(false);
-	// 监听
 	auto listen1 = EventListenerKeyboard::create();
-	float judgeX = judgePlace->getPosition().x;
-	float judgeY = judgePlace->getPosition().y;
-
-	// 键盘
 	listen1->onKeyPressed = [=](EventKeyboard::KeyCode keyCode, Event * event) {
-		//log("KeyPress:%d", keyCode);
-		log("%d", notefly);
-		if (&*notefly == nullptr)
+		// log("KeyPress:%d", keyCode);
+		// log("%d", notefly);
+		auto checkNote = [&](int which)
 		{
-			return;
-		}
-		auto animation = CCAnimation::create();
-		animation->addSpriteFrameWithFile("Fuck1.png");
-		animation->addSpriteFrameWithFile("Fuck2.png");
-		animation->addSpriteFrameWithFile("Fuck3.png");
-		animation->setRestoreOriginalFrame(false);
-		animation->setDelayPerUnit(0.1f);//设置动画的间隔时间
+			for (auto it = game.notes.begin(); it != game.notes.end(); )
+			{
+				auto &note = *it;
+				if (dist(note->getPosition(), judges[which]->getPosition()) <= 20)
+				{
+					auto animation = Animation::create();
+					animation->addSpriteFrameWithFile("Fuck1.png");
+					animation->addSpriteFrameWithFile("Fuck2.png");
+					animation->addSpriteFrameWithFile("Fuck3.png");
+					animation->setRestoreOriginalFrame(true);
+					animation->setDelayPerUnit(0.1f);//设置动画的间隔时间
 
+					auto action = Animate::create(animation);
+					judges[which]->runAction(Sequence::create(action, NULL));
 
+					(*it)->removeFromParent();
 
-		auto animate1 = CCAnimate::create(animation);
-		log("%f", notefly->getPosition().x);
-		log("%f", notefly->getPosition().y);
-		float nowx = notefly->getPosition().x;
-		float nowy = notefly->getPosition().y;
-		if (abs(nowx - judgeX) < 10)
+					it = game.notes.erase(it);
+				}
+				else ++it;
+			}
+		};
+
+		switch (keyCode)
 		{
-			log("ok\n");
+		case EventKeyboard::KeyCode::KEY_A:
+			log("A");
+			checkNote(0);
+			break;
+		case EventKeyboard::KeyCode::KEY_S:
+			log("S");
+			checkNote(1);
+			break;
+		case EventKeyboard::KeyCode::KEY_D:
+			log("D");
+			checkNote(2);
+			break;
+		case EventKeyboard::KeyCode::KEY_F:
+			log("F");
+			checkNote(3);
+			break;
+		default:
+			log("default pressed");
+			break;
 		}
-		else { log("false\n"); }
-
-		mainsprite->setVisible(true);
-
-		auto actionMoveDone = CallFuncN::create([=](Ref* sender) {
-			mainsprite->stopAllActions();
-			mainsprite->setVisible(false);
-		});
-		mainsprite->runAction(CCRepeatForever::create(CCSequence::create(animate1, actionMoveDone,NULL)));
-		//mainsprite->setVisible(false);
-		
-		notefly->cleanup();
-		this->removeChild(notefly);
 	};
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listen1, this);
 	
@@ -137,9 +135,9 @@ bool MainGameScene::init()
 
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	auto button = Button::create("back.png", "back_selected.png", "back_disabled.png");
-	
-	button->setPosition(Vec2(100, 50));
+	auto button = ui::Button::create("back.png", "back_selected.png", "back_disabled.png");
+
+	button->setPosition(Vec2(origin.x + 100, origin.y + 50));
 	button->addClickEventListener(CC_CALLBACK_1(MainGameScene::btnBackCallback, this));
 
 	this->addChild(button);
