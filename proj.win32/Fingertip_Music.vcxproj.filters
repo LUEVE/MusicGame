@@ -42,6 +42,12 @@
     <ClCompile Include="..\Classes\SelectScene.cpp">
       <Filter>src</Filter>
     </ClCompile>
+	<ClCompile Include="..\Classes\Block\SG_Note.cpp">
+      <Filter>src\block</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Block\SG_Game.cpp">
+      <Filter>src\block</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -67,6 +73,12 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SelectScene.h">
       <Filter>src</Filter>
+    </ClInclude>
+	<ClInclude Include="..\Classes\Block\SG_Note.h">
+      <Filter>src\block</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Block\SG_Game.h">
+      <Filter>src\block</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
