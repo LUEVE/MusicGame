@@ -1,4 +1,4 @@
-#ifndef __SETTING_SCENE_H__
+﻿#ifndef __SETTING_SCENE_H__
 #define __SETTING_SCENE_H__
 #include <iostream>
 #include "cocos2d.h"
@@ -14,6 +14,7 @@ public:
 	virtual bool init();
 
 	void btnBackCallback(Ref * pSender);
+	void fuck(Ref* sender, CheckBox::EventType type);
 
 	CREATE_FUNC(SettingScene);
 };

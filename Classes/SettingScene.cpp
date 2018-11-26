@@ -1,4 +1,4 @@
-#include "SettingScene.h"
+﻿#include "SettingScene.h"
 #include "SimpleAudioEngine.h"
 
 USING_NS_CC;
@@ -9,11 +9,14 @@ Scene* SettingScene::createScene()
 }
 
 
-static cocos2d::Size designResolutionSize = cocos2d::Size(1440, 900);
+static cocos2d::Size designResolutionSize = cocos2d::Size(1024, 768);
 static cocos2d::Size smallResolutionSize = cocos2d::Size(480, 320);
 static cocos2d::Size mediumResolutionSize = cocos2d::Size(1024, 768);
 //static cocos2d::Size largeResolutionSize = cocos2d::Size(2048, 1536);
 static cocos2d::Size largeResolutionSize = cocos2d::Size(1920, 1080);
+
+
+
 
 bool SettingScene::init()
 {
@@ -35,26 +38,23 @@ bool SettingScene::init()
 		"check_box_active.png",
 		"check_box_normal_disable.png",
 		"check_box_active_disable.png");
+
+
+
+
 	fullScreenCheckbox->addEventListener([&](Ref* sender, CheckBox::EventType type) {
 		Size frameSize;
+		
 		switch (type)
 		{
-			/*
-			Why the output is :
-			0.000000 0.000000
-			0.000000 0.000000
-			*/
 		case cocos2d::ui::CheckBox::EventType::SELECTED:
-			Director::getInstance()->getOpenGLView()->setDesignResolutionSize(largeResolutionSize.width, largeResolutionSize.height, ResolutionPolicy::EXACT_FIT);
-			visibleSize = Director::getInstance()->getVisibleSize(); 
-			Director::getInstance()->getOpenGLView()->setFullscreen();
-			log("%f %f", visibleSize.width, visibleSize.height);
+			// Director::getInstance()->getOpenGLView()->setDesignResolutionSize(largeResolutionSize.width, largeResolutionSize.height, ResolutionPolicy::EXACT_FIT);
+			 Director::getInstance()->getOpenGLView()->setFullscreen();
+
 			break;
 		case cocos2d::ui::CheckBox::EventType::UNSELECTED:
-			Director::getInstance()->getOpenGLView()->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::EXACT_FIT);
-			visibleSize = Director::getInstance()->getVisibleSize();
+			//Director::getInstance()->getOpenGLView()->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::EXACT_FIT);
 			Director::getInstance()->getOpenGLView()->setWindowed(designResolutionSize.width, designResolutionSize.height);
-			log("%f %f", visibleSize.width, visibleSize.height);
 			break;
 		default:
 			break;
@@ -76,3 +76,4 @@ void SettingScene::btnBackCallback(Ref* pSender)
 {
 	Director::getInstance()->popScene();
 }
+
