@@ -2,7 +2,9 @@
 #include "SettingScene.h"
 #include "MainGameScene.h"
 #include "AboutScene.h"
+#include "SelectScene.h"
 #include "SimpleAudioEngine.h"
+
 
 using namespace CocosDenshion;
 
@@ -33,9 +35,9 @@ bool StartScene::init()
 	this->createMenu();
 
 
-	auto audio = SimpleAudioEngine::getInstance();
+	/*auto audio = SimpleAudioEngine::getInstance();
 
-	audio->playBackgroundMusic("bgm.mp3", true);
+	audio->playBackgroundMusic("bgm.mp3", true);*/
 
 	return true;
 }
@@ -91,8 +93,8 @@ void StartScene::createMenu()
 void StartScene::menuStartCallback(Ref* pSender)
 {
 	log("Start Button");
-	auto maingameScene = MainGameScene::createScene();
-	Director::getInstance()->pushScene(maingameScene);
+	auto maingameScene = SelectScene::createScene();
+	Director::getInstance()->pushScene(TransitionFadeUp::create(0.5,maingameScene));
 }
 
 void StartScene::menuSettingCallback(Ref* pSender)
