@@ -22,7 +22,7 @@ void MainGameScene::update(float dt)
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	if (genProb(rng) <= 2)
 	{
-		SG_Note* newNote = SG_Note::create("white.jpg");
+		SG_Note* newNote = SG_Note::create("NoteResources/white.jpg");
 		int pos = genPos(rng);
 		newNote->setPosition(Vec2(visibleSize.width / 4 * pos + 100, 700));
 
@@ -35,7 +35,7 @@ void MainGameScene::update(float dt)
 		game.notes[pos].push_back(newNote);
 	}
 
-	for (int i = 0; i <= 3; ++i)
+	for (int i = 0; i < SG_Game::WAYS; ++i)
 	{
 		auto &vec = game.notes[i];
 		for (auto it = vec.begin(); it != vec.end(); ) {
@@ -102,6 +102,11 @@ static float dist(const Vec2 &a, const Vec2 &b)
 	return sqrt(sqr(a.x - b.x) + sqr(a.y - b.y));
 }
 
+static void restoreFrame(Sprite *s)
+{
+	s->setSpriteFrame(SpriteFrame::create("NoteResources/red.png", Rect(0, 0, 47, 46)));
+}
+
 
 bool MainGameScene::init()
 {
@@ -123,8 +128,8 @@ bool MainGameScene::init()
 
 
 	// 判断区
-	vector<Sprite*> judges = {SG_Note::create("red.png"), SG_Note::create("red.png"),
-		SG_Note::create("red.png"), SG_Note::create("red.png")};
+	vector<Sprite*> judges = {SG_Note::create("NoteResources/red.png"), SG_Note::create("NoteResources/red.png"),
+		SG_Note::create("NoteResources/red.png"), SG_Note::create("NoteResources/red.png")};
 	
 	for (int i = 0; i < judges.size(); ++i) // initialize judges
 	{
@@ -134,10 +139,10 @@ bool MainGameScene::init()
 
 	// 掉落块
 
-	game.notes[0].push_back(SG_Note::create("white.jpg"));
-	game.notes[1].push_back(SG_Note::create("white.jpg"));
-	game.notes[2].push_back(SG_Note::create("white.jpg"));
-	game.notes[3].push_back(SG_Note::create("white.jpg"));
+	game.notes[0].push_back(SG_Note::create("NoteResources/white.jpg"));
+	game.notes[1].push_back(SG_Note::create("NoteResources/white.jpg"));
+	game.notes[2].push_back(SG_Note::create("NoteResources/white.jpg"));
+	game.notes[3].push_back(SG_Note::create("NoteResources/white.jpg"));
 	for (int i = 0; i < SG_Game::WAYS; ++i) // initialize notes
 	{
 		game.notes[i].front()->setPosition(Vec2(visibleSize.width / 4 * i + 100, 700));
@@ -158,13 +163,14 @@ bool MainGameScene::init()
 			auto &vec = game.notes[which];
 			bool judgeFlag = false;
 			for (auto it = vec.begin(); it != vec.end(); ) {
+				auto restoreF = CallFunc::create([=]() { restoreFrame(judges[which]); });
 				 if (dist((*it)->getPosition(), judges[which]->getPosition()) <= 100 && dist((*it)->getPosition(), judges[which]->getPosition()) >=50)
 				{
 					
 					auto animation = Animation::create();
 					setJudgeAnimation(animation,3);
 					auto action = Animate::create(animation);
-					judges[which]->runAction(Sequence::create(action, nullptr));
+					judges[which]->runAction(Sequence::create(action, restoreF, nullptr));
 					(*it)->removeFromParent();
 					it = vec.erase(it);
 					// lyw 计数combo
@@ -178,7 +184,7 @@ bool MainGameScene::init()
 					 auto animation = Animation::create();
 					 setJudgeAnimation(animation,2);
 					 auto action = Animate::create(animation);
-					 judges[which]->runAction(Sequence::create(action, nullptr));
+					 judges[which]->runAction(Sequence::create(action, restoreF, nullptr));
 					 (*it)->removeFromParent();
 					 it = vec.erase(it);
 					 // lyw 计数combo
@@ -192,7 +198,7 @@ bool MainGameScene::init()
 					 setJudgeAnimation(animation,1);
 					 auto action = Animate::create(animation);
 					 
-					 judges[which]->runAction(Sequence::create(action, nullptr));
+					 judges[which]->runAction(Sequence::create(action, restoreF, nullptr));
 					 (*it)->removeFromParent();
 					 it = vec.erase(it);
 					 // lyw 计数combo
