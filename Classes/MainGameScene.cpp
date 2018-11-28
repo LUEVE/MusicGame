@@ -162,10 +162,23 @@ bool MainGameScene::init()
 		auto checkNote = [&](int which)
 		{
 			auto &vec = game.notes[which];
-			bool judgeFlag = false;
+			bool judgeFlag = true;
 			for (auto it = vec.begin(); it != vec.end(); ) {
 				auto restoreF = CallFunc::create([=]() { restoreFrame(judges[which]); });
-				 if (dist((*it)->getPosition(), judges[which]->getPosition()) <= 100 && dist((*it)->getPosition(), judges[which]->getPosition()) >=50)
+				if (dist((*it)->getPosition(), judges[which]->getPosition()) <= 150 && dist((*it)->getPosition(), judges[which]->getPosition()) >= 100) // miss
+				{
+					judgeFlag == false;
+					auto animation = Animation::create();
+					setJudgeAnimation(animation, 4);
+					auto action = Animate::create(animation);
+					judges[which]->runAction(Sequence::create(action, restoreF, nullptr));
+					(*it)->removeFromParent();
+					it = vec.erase(it);
+					// lyw 计数combo
+					this->comboNumber = 0;
+					break;
+				}
+				else if (dist((*it)->getPosition(), judges[which]->getPosition()) <= 100 && dist((*it)->getPosition(), judges[which]->getPosition()) >=50) // good
 				{
 					
 					auto animation = Animation::create();
@@ -289,17 +302,21 @@ void MainGameScene::btnBackCallback(Ref* pSender)
 void MainGameScene::setJudgeAnimation(Animation* animation,int i)
 {
 	string judge;
-	if (i == 3)
+	if (i==4)
 	{
-		judge = "good";
+		judge = "Judge\\miss";
+	}
+	else if (i == 3)
+	{
+		judge = "Judge\\good";
 	}
 	else if(i == 2)
 	{
-		judge = "great";
+		judge = "Judge\\great";
 	}
 	else
 	{
-		judge = "perfect";
+		judge = "Judge\\perfect";
 	}
 	animation->addSpriteFrameWithFile(judge+"1.png");
 	animation->addSpriteFrameWithFile(judge+"2.png");
