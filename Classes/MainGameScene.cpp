@@ -165,8 +165,10 @@ bool MainGameScene::init()
 			bool judgeFlag = true;
 			for (auto it = vec.begin(); it != vec.end(); ) {
 				auto restoreF = CallFunc::create([=]() { restoreFrame(judges[which]); });
-				if (dist((*it)->getPosition(), judges[which]->getPosition()) <= 150 && dist((*it)->getPosition(), judges[which]->getPosition()) >= 100) // miss
+				if (dist((*it)->getPosition(), judges[which]->getPosition()) <= SG_Game::MISSPLACE && dist((*it)->getPosition(), judges[which]->getPosition()) >= SG_Game::GOODPLACE) // miss
 				{
+					// music affect
+					CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("MusicEffect\\Effect_cai.mp3");
 					judgeFlag == false;
 					auto animation = Animation::create();
 					setJudgeAnimation(animation, 4);
@@ -178,9 +180,10 @@ bool MainGameScene::init()
 					this->comboNumber = 0;
 					break;
 				}
-				else if (dist((*it)->getPosition(), judges[which]->getPosition()) <= 100 && dist((*it)->getPosition(), judges[which]->getPosition()) >=50) // good
+				else if (dist((*it)->getPosition(), judges[which]->getPosition()) <= SG_Game::GOODPLACE && dist((*it)->getPosition(), judges[which]->getPosition()) >=SG_Game::GREATPLACE) // good
 				{
-					
+					// music affect
+					CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("MusicEffect\\Effect_cao.mp3");
 					auto animation = Animation::create();
 					setJudgeAnimation(animation,3);
 					auto action = Animate::create(animation);
@@ -193,8 +196,9 @@ bool MainGameScene::init()
 					break;
 
 				}
-				 else if(dist((*it)->getPosition(), judges[which]->getPosition()) < 50 && dist((*it)->getPosition(), judges[which]->getPosition()) >= 25)
+				 else if(dist((*it)->getPosition(), judges[which]->getPosition()) <= SG_Game::GREATPLACE && dist((*it)->getPosition(), judges[which]->getPosition()) >= SG_Game::PERFECTPLACE) // perfect
 				 {
+					 CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("MusicEffect\\Effect_xing.mp3");
 					 auto animation = Animation::create();
 					 setJudgeAnimation(animation,2);
 					 auto action = Animate::create(animation);
@@ -206,8 +210,9 @@ bool MainGameScene::init()
 					 judgeFlag = true;
 					 break;
 				 }
-				 else if ( dist((*it)->getPosition(), judges[which]->getPosition()) < 25)
+				 else if ( dist((*it)->getPosition(), judges[which]->getPosition()) <= SG_Game::PERFECTPLACE)
 				 {
+					 CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("MusicEffect\\Effect_diao.mp3");
 					 auto animation = Animation::create();
 					 setJudgeAnimation(animation,1);
 					 auto action = Animate::create(animation);
