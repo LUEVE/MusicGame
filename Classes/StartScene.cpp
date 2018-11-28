@@ -1,4 +1,4 @@
-#include "StartScene.h"
+﻿#include "StartScene.h"
 #include "SettingScene.h"
 #include "MainGameScene.h"
 #include "AboutScene.h"
@@ -93,8 +93,9 @@ void StartScene::createMenu()
 void StartScene::menuStartCallback(Ref* pSender)
 {
 	log("Start Button");
-	auto maingameScene = SelectScene::createScene();
-	Director::getInstance()->pushScene(TransitionFadeUp::create(0.5,maingameScene));
+	auto selectScene = SelectScene::createScene();
+	auto maingameScene = MainGameScene::createScene();
+	Director::getInstance()->pushScene(TransitionFadeUp::create(0.5,selectScene));
 }
 
 void StartScene::menuSettingCallback(Ref* pSender)

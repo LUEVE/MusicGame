@@ -1,6 +1,6 @@
-#include "SelectScene.h"
+ï»¿#include "SelectScene.h"
 #include "SimpleAudioEngine.h"
-
+#include "MainGameScene.h"
 USING_NS_CC;
 
 Scene* SelectScene::createScene()
@@ -41,11 +41,11 @@ bool SelectScene::init()
 	tableView->setPosition(ccp(visibleSize.width / 2, origin.y - 2*label1->getContentSize().height));
 	this->addChild(tableView);
 
-	//ÊôÐÔÉèÖÃ
-	tableView->setBounceable(true);                              //¿ªÆôµ¯ÐÔÐ§¹û
-	tableView->setDirection(cocos2d::extension::ScrollView::Direction::VERTICAL);  //×ÝÏò
-	tableView->setDelegate(this);								  //Î¯ÍÐ´úÀí
-	tableView->reloadData();									  //¼ÓÔØÊý¾Ý
+	//å±žæ€§è®¾ç½®
+	tableView->setBounceable(true);                              //å¼€å¯å¼¹æ€§æ•ˆæžœ
+	tableView->setDirection(cocos2d::extension::ScrollView::Direction::VERTICAL);  //çºµå‘
+	tableView->setDelegate(this);								  //å§”æ‰˜ä»£ç†
+	tableView->reloadData();									  //åŠ è½½æ•°æ®
 
 	return true;
 }
@@ -57,38 +57,38 @@ void SelectScene::btnBackCallback(Ref* pSender)
 
 TableViewCell* SelectScene::tableCellAtIndex(TableView* table, ssize_t idx) 
 {
-	char Icon[20];   //¸ù¾ÝidxÑ¡ÖÐÏÔÊ¾µÄÍ¼Æ¬
-	char number[10]; //ÏÔÊ¾label±êÇ©µÄÊý×Ö
+	char Icon[20];   //æ ¹æ®idxé€‰ä¸­æ˜¾ç¤ºçš„å›¾ç‰‡
+	char number[10]; //æ˜¾ç¤ºlabelæ ‡ç­¾çš„æ•°å­—
 	sprintf(Icon,"sp%d.png",idx%3+1);
 	sprintf(number, "%02d", idx);
 
-	TableViewCell* cell = table->dequeueCell();  //³ö¶ÓÁÐ
+	TableViewCell* cell = table->dequeueCell();  //å‡ºé˜Ÿåˆ—
 
-	//Î´µ½½áÎ²Ò»Ö±È¡
+	//æœªåˆ°ç»“å°¾ä¸€ç›´å–
 	if (!cell) {
 		cell = new TableViewCell();
-		cell->autorelease();  //×Ô¶¯ÊÍ·Å×ÊÔ´
+		cell->autorelease();  //è‡ªåŠ¨é‡Šæ”¾èµ„æº
 
-		//Ìí¼ÓÒ»¸ö¾«ÁéÍ¼Æ¬
+		//æ·»åŠ ä¸€ä¸ªç²¾çµå›¾ç‰‡
 		Sprite* sprite = Sprite::create(Icon);
-		sprite->setAnchorPoint(Point::ZERO);  //ÉèÖÃÃèµãÎª×óÏÂ½Ç
+		sprite->setAnchorPoint(Point::ZERO);  //è®¾ç½®æç‚¹ä¸ºå·¦ä¸‹è§’
 		sprite->setPosition(ccp(0, 0));
 		sprite->setOpacity(100);
 		cell->addChild(sprite,0,1);
 
-		//Ìí¼ÓÒ»¸ölabel±êÇ©
+		//æ·»åŠ ä¸€ä¸ªlabelæ ‡ç­¾
 		LabelTTF* label = LabelTTF::create(number, "Arial", 20);
 		label->setPosition(Point::ZERO);
 		label->setAnchorPoint(Point::ZERO);
 		cell->addChild(label, 0, 2);
 	}
 	else {
-		//¸ü»»¾«ÁéÍ¼Æ¬£¬Ê¹ÓÃÎÆÀí
+		//æ›´æ¢ç²¾çµå›¾ç‰‡ï¼Œä½¿ç”¨çº¹ç†
 		Texture2D* texture = TextureCache::sharedTextureCache()->addImage(Icon);
 		Sprite* sprite = (Sprite*)cell->getChildByTag(1);
 		sprite->setTexture(texture);
 
-		//¸ü¸ÄÍ¼Æ¬±àºÅ
+		//æ›´æ”¹å›¾ç‰‡ç¼–å·
 		LabelTTF* label = (LabelTTF*)cell->getChildByTag(2);
 		label->setString(number);
 	}
@@ -96,24 +96,26 @@ TableViewCell* SelectScene::tableCellAtIndex(TableView* table, ssize_t idx)
 	return cell;
 }
 
-//¸ù¾ÝidxÀ´ÉèÖÃÃ¿ÏîcellµÄ³ß´ç´óÐ¡
+//æ ¹æ®idxæ¥è®¾ç½®æ¯é¡¹cellçš„å°ºå¯¸å¤§å°
 Size SelectScene::tableCellSizeForIndex(TableView* table, ssize_t idx)
 {
 	//if (idx == 2) return CCSizeMake(100, 100);
 	return CCSizeMake(100, 100);
 }
 
-//Ò»¹²¶àÉÙÏîcell
+//ä¸€å…±å¤šå°‘é¡¹cell
 ssize_t SelectScene::numberOfCellsInTableView(TableView* table)
 {
 	return 10;
 }
 
-//Ä³Ïîcell±»µã»÷Ê±»Øµ÷º¯Êý
+//æŸé¡¹cellè¢«ç‚¹å‡»æ—¶å›žè°ƒå‡½æ•°
 void SelectScene::tableCellTouched(TableView* table, TableViewCell* cell)
 {
-	log("cell touched at index: %i", cell->getIdx()); //¿ØÖÆÌ¨Êä³ö
+	log("cell touched at index: %i", cell->getIdx()); //æŽ§åˆ¶å°è¾“å‡º
+	auto maingameScene = MainGameScene::createScene();
+	Director::getInstance()->pushScene(TransitionFadeUp::create(0.5, maingameScene));
 }
 
-void SelectScene::scrollViewDidScroll(cocos2d::extension::ScrollView* view) { } //¹ö¶¯Ê±»Øµ÷º¯Êý
-void SelectScene::scrollViewDidZoom(cocos2d::extension::ScrollView* view) { }   //·ÅËõÊ±»Øµ÷º¯Êý
+void SelectScene::scrollViewDidScroll(cocos2d::extension::ScrollView* view) { } //æ»šåŠ¨æ—¶å›žè°ƒå‡½æ•°
+void SelectScene::scrollViewDidZoom(cocos2d::extension::ScrollView* view) { }   //æ”¾ç¼©æ—¶å›žè°ƒå‡½æ•°
