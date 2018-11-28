@@ -1,21 +1,14 @@
 ﻿#include "SettingScene.h"
 #include "SimpleAudioEngine.h"
 
+using namespace CocosDenshion;
+
 USING_NS_CC;
 
 Scene* SettingScene::createScene()
 {
 	return SettingScene::create();
 }
-
-
-static cocos2d::Size designResolutionSize = cocos2d::Size(1024, 768);
-static cocos2d::Size smallResolutionSize = cocos2d::Size(480, 320);
-static cocos2d::Size mediumResolutionSize = cocos2d::Size(1024, 768);
-//static cocos2d::Size largeResolutionSize = cocos2d::Size(2048, 1536);
-static cocos2d::Size largeResolutionSize = cocos2d::Size(1920, 1080);
-
-
 
 
 bool SettingScene::init()
@@ -29,47 +22,37 @@ bool SettingScene::init()
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
 	auto backButton = Button::create("back.png", "back_selected.png", "back_disabled.png");
-	//backButton->setPosition(Vec2(250, 250));
+	backButton->setPosition(Vec2(100, 50));
 	backButton->addClickEventListener(CC_CALLBACK_1(SettingScene::btnBackCallback, this));
 	this->addChild(backButton);
 
-	auto fullScreenCheckbox = CheckBox::create("check_box_normal.png",
-		"check_box_normal_press.png",
-		"check_box_active.png",
-		"check_box_normal_disable.png",
-		"check_box_active_disable.png");
+	auto volumeLabel = Label::createWithSystemFont("Volume", "Arial", 24);
+	volumeLabel->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2 + 30));
+	this->addChild(volumeLabel);
 
+	auto slider = Slider::create();
+	slider->loadBarTexture("Slider_Back.png");
+	slider->loadSlidBallTextures("SliderNode_Normal.png", "SliderNode_Press.png", "SliderNode_Disable.png");
+	slider->loadProgressBarTexture("Slider_PressBar.png");
+	slider->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
+	slider->setPercent(75);
 
+	slider->addEventListener(CC_CALLBACK_2(SettingScene::SliderCallBack, this));
 
-
-	fullScreenCheckbox->addEventListener([&](Ref* sender, CheckBox::EventType type) {
-		Size frameSize;
-		
-		switch (type)
-		{
-		case cocos2d::ui::CheckBox::EventType::SELECTED:
-			// Director::getInstance()->getOpenGLView()->setDesignResolutionSize(largeResolutionSize.width, largeResolutionSize.height, ResolutionPolicy::EXACT_FIT);
-			 Director::getInstance()->getOpenGLView()->setFullscreen();
-
-			break;
-		case cocos2d::ui::CheckBox::EventType::UNSELECTED:
-			//Director::getInstance()->getOpenGLView()->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::EXACT_FIT);
-			Director::getInstance()->getOpenGLView()->setWindowed(designResolutionSize.width, designResolutionSize.height);
-			break;
-		default:
-			break;
-		}
-	});
-	fullScreenCheckbox->setPosition(Vec2(visibleSize.width / 2 - 50, visibleSize.height / 2));
-	this->addChild(fullScreenCheckbox);
-
-	auto fullScreenText = Text::create("Full-Screen", "Arial", 24);
-
-
-	fullScreenText->setPosition(Vec2(visibleSize.width / 2 + 50, visibleSize.height / 2));
-	this->addChild(fullScreenText);
+	this->addChild(slider);
 
 	return true;
+}
+
+void SettingScene::SliderCallBack(Ref *pSender, Slider::EventType type) {
+	auto item = (Slider*)(pSender);
+	log("%i", item->getPercent());
+	if (item->getPercent() == 100) {
+		//item->setEnabled(false);
+	}
+	else {
+		SimpleAudioEngine::getInstance()->setBackgroundMusicVolume(item->getPercent() / 100.0f);
+	}
 }
 
 void SettingScene::btnBackCallback(Ref* pSender)
