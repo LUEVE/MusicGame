@@ -1,6 +1,7 @@
-#include "PauseScene.h"
+﻿#include "PauseScene.h"
 #include "SettingScene.h"
 #include "SimpleAudioEngine.h"
+#include "MainGameScene.h"
 
 USING_NS_CC;
 
@@ -44,19 +45,21 @@ bool PauseScene::init()
 	auto settingItem = MenuItemLabel::create(settingLabel, CC_CALLBACK_1(PauseScene::menuSettingCallback, this));
 	auto exitLabel = Label::createWithSystemFont("Exit", "Arial", 24);
 	auto exitItem = MenuItemLabel::create(exitLabel, CC_CALLBACK_1(PauseScene::menuExitCallback, this));
-
+	auto restartLabel = Label::createWithSystemFont("Restart", "Arial", 24);
+	auto restartItem = MenuItemLabel::create(restartLabel, CC_CALLBACK_1(PauseScene::menuRestartCallback, this));
 	Vector<MenuItem*> menuItems;
 
+	menuItems.pushBack(restartItem);
 	menuItems.pushBack(resumeItem);
 	menuItems.pushBack(settingItem);
 	menuItems.pushBack(exitItem);
-
+	
 	auto menu = Menu::createWithArray(menuItems);
 	//menu->setPosition(Vec2::ZERO);
 	menu->alignItemsVertically();
 	//menu->alignItemsVerticallyWithPadding(20);
 	this->addChild(menu);
-
+	
 	// keyboard listen
 	auto listen1 = EventListenerKeyboard::create();
 
@@ -70,7 +73,7 @@ bool PauseScene::init()
 			break;
 		}
 	};
-
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listen1, this);
 
 	return true;
 }
@@ -79,6 +82,7 @@ void PauseScene::menuResumeCallback(Ref* pSender)
 {
 	log("Resume Button");
 	Director::getInstance()->popScene();
+	//Director::sharedDirector()->replaceScene(MainGameScene::createScene());
 }
 
 void PauseScene::menuSettingCallback(Ref* pSender)
@@ -92,4 +96,11 @@ void PauseScene::menuExitCallback(Ref* pSender)
 {
 	log("Exit Button");
 	Director::getInstance()->popToRootScene();
+}
+
+void PauseScene::menuRestartCallback(cocos2d::Ref* pSender)
+{
+	log("ReStart Button");
+	Director::getInstance()->popScene();
+	Director::sharedDirector()->replaceScene(MainGameScene::createScene());
 }

@@ -1,4 +1,4 @@
-#ifndef __PAUSE_SCENE_H__
+﻿#ifndef __PAUSE_SCENE_H__
 #define __PAUSE_SCENE_H__
 #include <iostream>
 #include "cocos2d.h"
@@ -15,7 +15,7 @@ public:
 	void menuResumeCallback(cocos2d::Ref* pSender);
 	void menuSettingCallback(cocos2d::Ref* pSender);
 	void menuExitCallback(cocos2d::Ref* pSender);
-
+	void menuRestartCallback(cocos2d::Ref* pSender);
 	CREATE_FUNC(PauseScene);
 };
 

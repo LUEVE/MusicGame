@@ -116,6 +116,8 @@ bool MainGameScene::init()
 		return false;
 	}
 
+;
+
 	this->comboNumber = 0;
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	// combo区
@@ -298,6 +300,7 @@ bool MainGameScene::init()
 
 	return true;
 }
+
 
 void MainGameScene::btnBackCallback(Ref* pSender)
 {
