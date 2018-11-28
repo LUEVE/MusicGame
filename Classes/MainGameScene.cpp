@@ -2,6 +2,7 @@
 #include "SimpleAudioEngine.h"
 // #include "Block/SG_BlockF91.h"
 #include "Block/SG_Note.h"
+#include "PauseScene.h"
 USING_NS_CC;
 
 Scene* MainGameScene::createScene()
@@ -221,6 +222,7 @@ bool MainGameScene::init()
 			this->addChild(comboNumberLabel);
 		};
 
+
 		switch (keyCode)
 		{
 		case EventKeyboard::KeyCode::KEY_A:
@@ -238,6 +240,16 @@ bool MainGameScene::init()
 		case EventKeyboard::KeyCode::KEY_F:
 			log("F");
 			checkNote(3);
+			break;
+		case EventKeyboard::KeyCode::KEY_ESCAPE:
+			/*auto visibleSize = Director::getInstance()->getVisibleSize();
+			auto *renderTexture = RenderTexture::create(visibleSize.width, visibleSize.height);
+			renderTexture->begin();
+			Director::getInstance()->getRunningScene()->visit();
+			renderTexture->end();
+			auto pauseScene = PauseScene::createScene(renderTexture);
+			Director::getInstance()->pushScene(pauseScene);*/
+			Director::getInstance()->pushScene(PauseScene::createScene());
 			break;
 		default:
 			log("default pressed");

@@ -35,9 +35,9 @@ bool StartScene::init()
 	this->createMenu();
 
 
-	/*auto audio = SimpleAudioEngine::getInstance();
-
-	audio->playBackgroundMusic("bgm.mp3", true);*/
+	auto audio = SimpleAudioEngine::getInstance();
+	audio->playBackgroundMusic("bgm.mp3", true);
+	audio->setBackgroundMusicVolume(0.75);
 
 	return true;
 }
