@@ -1,4 +1,4 @@
-#include "ResultScene.h"
+ï»¿#include "ResultScene.h"
 
 USING_NS_CC;
 
@@ -19,9 +19,9 @@ void ResultScene::update(float dt) {
 	this->addChild(scoreLabel);
 
 	int rank;
-	// TODO: allNotesÊÇÒ»¸ö¶ÓÁĞ£¬×°×ÅÕâÊ×¸èµÄËùÓĞÒô·ûµÄÏûÏ¢
-	// TODO : int allNoteNum = game.allNotes.size();
-	int allNoteNum = 60;
+	// TODO: allNotesæ˜¯ä¸€ä¸ªé˜Ÿåˆ—ï¼Œè£…ç€è¿™é¦–æ­Œçš„æ‰€æœ‰éŸ³ç¬¦çš„æ¶ˆæ¯
+	 TODO : int allNoteNum = game.allNotes.size();
+
 	int scoreValue = calScoreValue(game.judgeCount[PERFECT], game.judgeCount[GREAT], game.judgeCount[GOOD], game.judgeCount[MISS], allNoteNum);
 	if(game.judgeCount[MISS] == 0 && game.judgeCount[GOOD] == 0) {
 		rank = SS_RANK;

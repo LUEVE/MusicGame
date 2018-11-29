@@ -19,6 +19,9 @@ USING_NS_CC;
 //
 //	return scene;
 //}
+std::chrono::steady_clock::time_point MainGameScene::pauseEnd;
+//std::chrono::steady_clock::time_point pauseStart;
+//chrono::steady_clock::duration pauseDuration;
 
 Scene* PauseScene::createScene()
 {
@@ -71,6 +74,11 @@ bool PauseScene::init()
 		{
 		case EventKeyboard::KeyCode::KEY_ESCAPE:
 			Director::getInstance()->popScene();
+
+			CocosDenshion::SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();
+
+			MainGameScene::pauseEnd = std::chrono::steady_clock::now();
+			MainGameScene::pauseDuration += MainGameScene::pauseEnd - MainGameScene::pauseStart;
 			break;
 		default:
 			break;
@@ -85,6 +93,10 @@ void PauseScene::menuResumeCallback(Ref* pSender)
 {
 	log("Resume Button");
 	Director::getInstance()->popScene();
+	CocosDenshion::SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();
+
+	MainGameScene::pauseEnd = std::chrono::steady_clock::now();
+	MainGameScene::pauseDuration += MainGameScene::pauseEnd - MainGameScene::pauseStart;
 	//Director::sharedDirector()->replaceScene(MainGameScene::createScene());
 }
 

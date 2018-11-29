@@ -1,4 +1,4 @@
-#include "testScene.h"
+﻿#include "testScene.h"
 #include "SimpleAudioEngine.h"
 #include "ui/UIButton.h"
 
@@ -28,6 +28,7 @@ bool testScene::init()
 	}
 	// --
 
+	// ----- lywlyw 
 	startPoint = steady_clock::now();
 
 	judges.push_back(Sprite::create("NoteResources/red.png"));
@@ -99,7 +100,7 @@ void testScene::appearNotes()
 		noteInfo = game.allNotes.front();
 	}
 }
-
+// 自动判断
 void testScene::judgeNotes()
 {
 	for (int i = 0; i < SG_Game::WAYS; ++i)
