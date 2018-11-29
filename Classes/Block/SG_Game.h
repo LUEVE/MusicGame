@@ -2,6 +2,8 @@
 #include "cocos2d.h"
 #include <vector>
 #include "SG_Note.h"
+#include <queue>
+#include "SG_NoteInfo.h"
 
 #define MISS 4
 #define GOOD 3
@@ -38,7 +40,8 @@ public:
 	
 	long long gameScore = 0;
 	int judgeCount[JUDGE_NUM];
-	std::vector<std::vector<SG_Note*>> notes;
+	std::vector<std::vector<SG_Note*>> notes; // now notes
+	std::queue<SG_NoteInfo> allNotes; // all notes in one game
 	SG_Game();
 private:
 

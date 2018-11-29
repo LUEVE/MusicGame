@@ -1,5 +1,23 @@
 ﻿#include "Block/SG_Note.h"
 
+SG_Note::SG_Note(int speed, int judgeTime, int appearTime, int whichWay)
+	: Sprite(), speed(speed), judgeTime(judgeTime), appearTime(appearTime), whichWay(whichWay)
+{
+}
+
+SG_Note* SG_Note::create(const string& filename, int speed, int appearTime, int judgeTime, int whichWay)
+{
+	SG_Note *sprite = new (std::nothrow) SG_Note(speed, judgeTime, appearTime, whichWay);
+	if (sprite && sprite->initWithFile(filename))
+	{
+		sprite->autorelease();
+		return sprite;
+	}
+	CC_SAFE_DELETE(sprite);
+	return nullptr;
+}
+
+
 SG_Note* SG_Note::create(const string& filename, const Rect& rect)
 {
 	SG_Note *sprite = new (std::nothrow) SG_Note();

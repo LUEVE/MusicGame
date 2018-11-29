@@ -5,6 +5,8 @@
 #include "SelectScene.h"
 #include "CreatorScene.h"
 #include "SimpleAudioEngine.h"
+#include "GeneratorScene.h"
+#include "testScene.h"
 
 
 using namespace CocosDenshion;
@@ -123,7 +125,7 @@ void StartScene::menuStartCallback(Ref* pSender)
 void StartScene::menuSettingCallback(Ref* pSender)
 {
 	log("Setting Button");
-	auto settingScene = SettingScene::createScene();
+	auto settingScene = GeneratorScene::create();
 	Director::getInstance()->pushScene(settingScene);
 }
 
@@ -137,8 +139,8 @@ void StartScene::menuCreatorCallback(Ref* pSender)
 void StartScene::menuAboutCallback(Ref* pSender)
 {
 	log("About Button");
-	auto aboutScene = AboutScene::createScene();
-	Director::getInstance()->pushScene(aboutScene);
+	auto testScene = testScene::create();
+	Director::getInstance()->pushScene(testScene);
 }
 
 void StartScene::menuExitCallback(Ref* pSender)
