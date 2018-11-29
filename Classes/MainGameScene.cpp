@@ -24,7 +24,8 @@ void MainGameScene::update(float dt)
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	if (genProb(rng) <= 2)
 	{
-		SG_Note* newNote = SG_Note::create("NoteResources/white.jpg");
+		//SG_Note* newNote = SG_Note::create("NoteResources/white.jpg");
+		SG_Note* newNote = SG_Note::create("greenhat.png");
 		int pos = genPos(rng);
 		newNote->setPosition(Vec2(194 * pos + 220, 700));
 		//194 * i + 220,
@@ -380,12 +381,14 @@ bool MainGameScene::init()
 
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	auto button = ui::Button::create("back.png", "back_selected.png", "back_disabled.png");
-
-	button->setPosition(Vec2(origin.x + 100, origin.y + 50));
-	button->addClickEventListener(CC_CALLBACK_1(MainGameScene::btnBackCallback, this));
-
-	this->addChild(button);
+	// backbutton
+	auto sprite_back = Sprite::create("back.png");
+	auto sprite_backselected = Sprite::create("back_selected.png");
+	auto menuBackItem = MenuItemSprite::create(sprite_back, sprite_backselected, sprite_back, CC_CALLBACK_1(MainGameScene::menuBackCallBack, this));
+	menuBackItem->setPosition(Vec2(30, visibleSize.height - 30));
+	auto menu0 = Menu::create(menuBackItem, NULL);
+	menu0->setPosition(Vec2::ZERO);
+	this->addChild(menu0);
 
 	scheduleUpdate();
 
@@ -393,9 +396,9 @@ bool MainGameScene::init()
 }
 
 
-void MainGameScene::btnBackCallback(Ref* pSender)
+void MainGameScene::menuBackCallBack(Ref* pSender)
 {
-	Director::getInstance()->popScene();
+	Director::getInstance()->pushScene(PauseScene::createScene());
 }
 
 void MainGameScene::setJudgeAnimation(Animation* animation,int i)

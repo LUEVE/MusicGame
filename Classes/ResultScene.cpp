@@ -75,10 +75,15 @@ bool ResultScene::init() {
 		return false;
 	}
 	auto visibleSize = Director::getInstance()->getVisibleSize();
-	auto backButton = Button::create("back.png", "back_selected.png", "back_disabled.png");
-	backButton->setPosition(Vec2(100, 50));
-	backButton->addClickEventListener(CC_CALLBACK_1(ResultScene::btnBackCallback, this));
-	this->addChild(backButton);
+	
+	// backbutton
+	auto sprite_back = Sprite::create("back.png");
+	auto sprite_backselected = Sprite::create("back_selected.png");
+	auto menuBackItem = MenuItemSprite::create(sprite_back, sprite_backselected, sprite_back, CC_CALLBACK_1(ResultScene::menuBackCallBack, this));
+	menuBackItem->setPosition(Vec2(30, visibleSize.height - 30));
+	auto menu0 = Menu::create(menuBackItem, NULL);
+	menu0->setPosition(Vec2::ZERO);
+	this->addChild(menu0);
 
 	auto perfectSprite = SG_Note::create("perfect_result.png");
 	perfectSprite->setPosition(Vec2(visibleSize.width / 10 * 2, visibleSize.height / 10 * 7.5));
@@ -103,6 +108,6 @@ bool ResultScene::init() {
 	return true;
 }
 
-void ResultScene::btnBackCallback(Ref* pSender) {
+void ResultScene::menuBackCallBack(Ref* pSender) {
 	Director::getInstance()->popScene();
 }

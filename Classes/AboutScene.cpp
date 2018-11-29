@@ -18,17 +18,19 @@ bool AboutScene::init()
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	auto button = Button::create("back.png", "back_selected.png", "back_disabled.png");
-
-	button->setPosition(Vec2(100, 50));
-	button->addClickEventListener(CC_CALLBACK_1(AboutScene::btnBackCallback, this));
-
-	this->addChild(button);
+	// backbutton
+	auto sprite_back = Sprite::create("back.png");
+	auto sprite_backselected = Sprite::create("back_selected.png");
+	auto menuBackItem = MenuItemSprite::create(sprite_back, sprite_backselected, sprite_back, CC_CALLBACK_1(AboutScene::menuBackCallBack, this));
+	menuBackItem->setPosition(Vec2(30, visibleSize.height - 30));
+	auto menu0 = Menu::create(menuBackItem, NULL);
+	menu0->setPosition(Vec2::ZERO);
+	this->addChild(menu0);
 
 	return true;
 }
 
-void AboutScene::btnBackCallback(Ref* pSender)
+void AboutScene::menuBackCallBack(Ref* pSender)
 {
 	Director::getInstance()->popScene();
 }

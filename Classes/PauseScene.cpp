@@ -39,19 +39,22 @@ bool PauseScene::init()
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
+	auto restartLabel = Label::createWithSystemFont("Restart", "Arial", 24);
+	auto restartItem = MenuItemLabel::create(restartLabel, CC_CALLBACK_1(PauseScene::menuRestartCallback, this));
 	auto resumeLabel = Label::createWithSystemFont("Resume", "Arial", 24);
 	auto resumeItem = MenuItemLabel::create(resumeLabel, CC_CALLBACK_1(PauseScene::menuResumeCallback, this));
 	auto settingLabel = Label::createWithSystemFont("Setting", "Arial", 24);
 	auto settingItem = MenuItemLabel::create(settingLabel, CC_CALLBACK_1(PauseScene::menuSettingCallback, this));
+	auto backLabel = Label::createWithSystemFont("Back", "Arial", 24);
+	auto backItem = MenuItemLabel::create(backLabel, CC_CALLBACK_1(PauseScene::menuBackCallback, this));
 	auto exitLabel = Label::createWithSystemFont("Exit", "Arial", 24);
 	auto exitItem = MenuItemLabel::create(exitLabel, CC_CALLBACK_1(PauseScene::menuExitCallback, this));
-	auto restartLabel = Label::createWithSystemFont("Restart", "Arial", 24);
-	auto restartItem = MenuItemLabel::create(restartLabel, CC_CALLBACK_1(PauseScene::menuRestartCallback, this));
 	Vector<MenuItem*> menuItems;
 
 	menuItems.pushBack(restartItem);
 	menuItems.pushBack(resumeItem);
 	menuItems.pushBack(settingItem);
+	menuItems.pushBack(backItem);
 	menuItems.pushBack(exitItem);
 	
 	auto menu = Menu::createWithArray(menuItems);
@@ -90,6 +93,12 @@ void PauseScene::menuSettingCallback(Ref* pSender)
 	log("Setting Button");
 	auto settingScene = SettingScene::createScene();
 	Director::getInstance()->pushScene(settingScene);
+}
+
+void PauseScene::menuBackCallback(Ref* pSender)
+{
+	log("Back Button");
+	Director::getInstance()->popScene();
 }
 
 void PauseScene::menuExitCallback(Ref* pSender)

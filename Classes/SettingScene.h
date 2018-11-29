@@ -13,6 +13,8 @@ public:
 
 	virtual bool init();
 
+	void menuBackCallBack(Ref *pSender);
+
 	void SliderBGMCallBack(Ref *pSender, Slider::EventType type);
 	void SliderEffectCallBack(Ref *pSender, Slider::EventType type);
 

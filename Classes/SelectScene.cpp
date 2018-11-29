@@ -22,15 +22,14 @@ bool SelectScene::init()
 	//Size mysize = Director::sharedDirector()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	auto song1_bg = Sprite::create("song1.jpg");
-	song1_bg->setAnchorPoint(Vec2(0, 0));
-	song1_bg->setPosition(Vec2(0, 0));
-	this->addChild(song1_bg);
-
-	auto button = Button::create("back.png", "back_selected.png", "back_disabled.png");
-	button->setPosition(Vec2(100, 50));
-	button->addClickEventListener(CC_CALLBACK_1(SelectScene::btnBackCallback, this));
-	this->addChild(button);
+	// backbutton
+	auto sprite_back = Sprite::create("back.png");
+	auto sprite_backselected = Sprite::create("back_selected.png");
+	auto menuBackItem = MenuItemSprite::create(sprite_back, sprite_backselected, sprite_back, CC_CALLBACK_1(SelectScene::menuBackCallBack, this));
+	menuBackItem->setPosition(Vec2(30, visibleSize.height - 30));
+	auto menu0 = Menu::create(menuBackItem, NULL);
+	menu0->setPosition(Vec2::ZERO);
+	this->addChild(menu0);
 
 	auto label1 = Label::createWithTTF("Select Songs", "fonts/Marker Felt.ttf", 24);
 	label1->setPosition(Vec2(origin.x + visibleSize.width / 2,
@@ -50,7 +49,7 @@ bool SelectScene::init()
 	return true;
 }
 
-void SelectScene::btnBackCallback(Ref* pSender)
+void SelectScene::menuBackCallBack(Ref* pSender)
 {
 	Director::getInstance()->popScene();
 }
@@ -114,7 +113,7 @@ void SelectScene::tableCellTouched(TableView* table, TableViewCell* cell)
 {
 	log("cell touched at index: %i", cell->getIdx()); //控制台输出
 	auto maingameScene = MainGameScene::createScene();
-	Director::getInstance()->pushScene(TransitionFadeUp::create(0.5, maingameScene));
+	Director::getInstance()->pushScene(maingameScene);
 }
 
 void SelectScene::scrollViewDidScroll(cocos2d::extension::ScrollView* view) { } //滚动时回调函数

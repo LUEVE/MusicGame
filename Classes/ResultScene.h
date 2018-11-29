@@ -33,7 +33,7 @@ public:
 		this->game.notes = game.notes;
 	}
 	void update(float dt);
-	void btnBackCallback(Ref * pSender);
+	void menuBackCallBack(Ref * pSender);
 	int calScoreValue(int perfect, int great, int good, int miss, int allNotesNum) {
 		double value;
 		value = perfect * 1.0 + great * 0.7 + good * 0.5;

@@ -21,6 +21,16 @@ bool SettingScene::init()
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
+	// backbutton
+	auto sprite_back = Sprite::create("back.png");
+	auto sprite_backselected = Sprite::create("back_selected.png");
+	auto menuBackItem = MenuItemSprite::create(sprite_back, sprite_backselected, sprite_back, CC_CALLBACK_1(SettingScene::menuBackCallBack, this));
+	menuBackItem->setPosition(Vec2(30, visibleSize.height - 30));
+	auto menu0 = Menu::create(menuBackItem, NULL);
+	menu0->setPosition(Vec2::ZERO);
+	this->addChild(menu0);
+
+
 	auto userdata = UserDefault::sharedUserDefault();
 
 	/* Set background music volume */
@@ -145,6 +155,11 @@ bool SettingScene::init()
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listen1, this);
 
 	return true;
+}
+
+void SettingScene::menuBackCallBack(Ref * pSender)
+{
+	Director::getInstance()->popScene();
 }
 
 void SettingScene::SliderBGMCallBack(Ref *pSender, Slider::EventType type) {

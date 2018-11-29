@@ -3,6 +3,7 @@
 #include "MainGameScene.h"
 #include "AboutScene.h"
 #include "SelectScene.h"
+#include "CreatorScene.h"
 #include "SimpleAudioEngine.h"
 
 
@@ -68,18 +69,21 @@ void StartScene::createMenu()
 
 	auto startItem = this->createSprite("START", CC_CALLBACK_1(StartScene::menuStartCallback, this));
 	auto settingItem = this->createSprite("SETTING", CC_CALLBACK_1(StartScene::menuSettingCallback, this));
+	auto creatorItem = this->createSprite("CREATOR", CC_CALLBACK_1(StartScene::menuCreatorCallback, this));
 	auto aboutItem = this->createSprite("ABOUT", CC_CALLBACK_1(StartScene::menuAboutCallback, this));
 	auto exitItem = this->createSprite("EXIT", CC_CALLBACK_1(StartScene::menuExitCallback, this));
 
 	Vector<MenuItem*> menuItems;
 
-	startItem->setPosition(Vec2(visibleSize.width / 2 - 110, visibleSize.height / 2 + 150));
-	settingItem->setPosition(Vec2(visibleSize.width / 2 + 110, visibleSize.height / 2 + 50));
-	aboutItem->setPosition(Vec2(visibleSize.width / 2 - 110, visibleSize.height / 2 - 50));
-	exitItem->setPosition(Vec2(visibleSize.width / 2 + 110, visibleSize.height / 2 - 150));
+	startItem->setPosition(Vec2(visibleSize.width / 2 - 75, visibleSize.height / 2 + 220));
+	settingItem->setPosition(Vec2(visibleSize.width / 2 + 75, visibleSize.height / 2 + 110));
+	creatorItem->setPosition(Vec2(visibleSize.width / 2 - 75, visibleSize.height / 2));
+	aboutItem->setPosition(Vec2(visibleSize.width / 2 + 75, visibleSize.height / 2 - 110));
+	exitItem->setPosition(Vec2(visibleSize.width / 2 - 75, visibleSize.height / 2 - 220));
 
 	menuItems.pushBack(startItem);
 	menuItems.pushBack(settingItem);
+	menuItems.pushBack(creatorItem);
 	menuItems.pushBack(aboutItem);
 	menuItems.pushBack(exitItem);
 
@@ -121,6 +125,13 @@ void StartScene::menuSettingCallback(Ref* pSender)
 	log("Setting Button");
 	auto settingScene = SettingScene::createScene();
 	Director::getInstance()->pushScene(settingScene);
+}
+
+void StartScene::menuCreatorCallback(Ref* pSender)
+{
+	log("Creator Button");
+	auto creatorScene = CreatorScene::createScene();
+	Director::getInstance()->pushScene(creatorScene);
 }
 
 void StartScene::menuAboutCallback(Ref* pSender)

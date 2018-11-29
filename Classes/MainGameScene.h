@@ -9,7 +9,7 @@
 
 
 // 游戏开始MAX_RUNNING_TIME秒之后结束
-#define MAX_RUNNING_TIME 5
+#define MAX_RUNNING_TIME 15
 
 using namespace std;
 class MainGameScene : public cocos2d::Scene
@@ -22,7 +22,7 @@ public:
 	static cocos2d::Scene* createScene();
 	bool CreatAllSpirtInSong();
 	virtual bool init();
-	void btnBackCallback(Ref * pSender);
+	void menuBackCallBack(Ref * pSender);
 	void setJudgeAnimation(Animation* animation, int i);
 	void update(float dt);
 	cocos2d::Label*comboNumberLabel, *gameScoreLabel, *addedGameScoreLabel;

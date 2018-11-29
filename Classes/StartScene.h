@@ -16,6 +16,7 @@ public:
 	void menuStartCallback(cocos2d::Ref* pSender);
 	void menuSettingCallback(cocos2d::Ref* pSender);
 	void menuAboutCallback(cocos2d::Ref* pSender);
+	void menuCreatorCallback(cocos2d::Ref* pSender);
 	void menuExitCallback(cocos2d::Ref* pSender);
 
 	CREATE_FUNC(StartScene);

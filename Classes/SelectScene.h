@@ -17,7 +17,7 @@ public:
 	static cocos2d::Scene* createScene();
 	CREATE_FUNC(SelectScene);
 	
-	void btnBackCallback(Ref * pSender);
+	void menuBackCallBack(Ref * pSender);
 
 	//继承于CCTableViewDataSource
 	virtual Size tableCellSizeForIndex(TableView* table, ssize_t idx);     //根据idx来设置每项cell的尺寸大小
