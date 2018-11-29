@@ -93,7 +93,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\Resources\f91.jpg" />
     <Image Include="..\Resources\white.jpg" />
   </ItemGroup>
 </Project>

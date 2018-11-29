@@ -26,8 +26,8 @@ void MainGameScene::update(float dt)
 	{
 		SG_Note* newNote = SG_Note::create("NoteResources/white.jpg");
 		int pos = genPos(rng);
-		newNote->setPosition(Vec2(visibleSize.width / 4 * pos + 100, 700));
-
+		newNote->setPosition(Vec2(194 * pos + 220, 700));
+		//194 * i + 220,
 		auto moveD = MoveBy::create(0.1, Vec2(0, -genSpeed(rng)));
 		auto fall = RepeatForever::create(moveD);
 		newNote->runAction(fall);
@@ -117,7 +117,11 @@ bool MainGameScene::init()
 		return false;
 	}
 
-;
+	auto mainGame_bg = Sprite::create("mainGame_bg.png");
+	mainGame_bg->setAnchorPoint(Vec2(0, 0));
+	mainGame_bg->setPosition(Vec2(0, 0));
+	this->addChild(mainGame_bg);
+
 
 	this->comboNumber = 0;
 	auto visibleSize = Director::getInstance()->getVisibleSize();
@@ -137,24 +141,24 @@ bool MainGameScene::init()
 	
 	for (int i = 0; i < judges.size(); ++i) // initialize judges
 	{
-		judges[i]->setPosition(Vec2(visibleSize.width / 4 * i + 100, 200));
+		judges[i]->setPosition(Vec2(194 * i + 220, 200));
 		this->addChild(judges[i]);
 	}
 
 	// 掉落块
 
-	game.notes[0].push_back(SG_Note::create("NoteResources/white.jpg"));
-	game.notes[1].push_back(SG_Note::create("NoteResources/white.jpg"));
-	game.notes[2].push_back(SG_Note::create("NoteResources/white.jpg"));
-	game.notes[3].push_back(SG_Note::create("NoteResources/white.jpg"));
-	for (int i = 0; i < SG_Game::WAYS; ++i) // initialize notes
-	{
-		game.notes[i].front()->setPosition(Vec2(visibleSize.width / 4 * i + 100, 700));
-		auto moveD = MoveBy::create(0.1, Vec2(0, -20));
-		auto fall = RepeatForever::create(moveD);
-		game.notes[i].front()->runAction(fall);
-		this->addChild(game.notes[i].front());
-	}
+	//game.notes[0].push_back(SG_Note::create("NoteResources/white.jpg"));
+	//game.notes[1].push_back(SG_Note::create("NoteResources/white.jpg"));
+	//game.notes[2].push_back(SG_Note::create("NoteResources/white.jpg"));
+	//game.notes[3].push_back(SG_Note::create("NoteResources/white.jpg"));
+	//for (int i = 0; i < SG_Game::WAYS; ++i) // initialize notes
+	//{
+	//	game.notes[i].front()->setPosition(Vec2(194 * i + 220, 700));
+	//	auto moveD = MoveBy::create(0.1, Vec2(0, -20));
+	//	auto fall = RepeatForever::create(moveD);
+	//	game.notes[i].front()->runAction(fall);
+	//	this->addChild(game.notes[i].front());
+	//}
 
 	// 键盘事件
 	auto listen1 = EventListenerKeyboard::create();
@@ -186,7 +190,7 @@ bool MainGameScene::init()
 				else if (dist((*it)->getPosition(), judges[which]->getPosition()) <= SG_Game::GOODPLACE && dist((*it)->getPosition(), judges[which]->getPosition()) >=SG_Game::GREATPLACE) // good
 				{
 					// music affect
-					CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("MusicEffect\\Effect_cao.mp3");
+					CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("MusicEffect\\Effect_ruo.mp3");
 					auto animation = Animation::create();
 					setJudgeAnimation(animation,3);
 					auto action = Animate::create(animation);
@@ -215,7 +219,7 @@ bool MainGameScene::init()
 				 }
 				 else if ( dist((*it)->getPosition(), judges[which]->getPosition()) <= SG_Game::PERFECTPLACE)
 				 {
-					 CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("MusicEffect\\Effect_diao.mp3");
+					 CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("MusicEffect\\Effect_qiang.mp3");
 					 auto animation = Animation::create();
 					 setJudgeAnimation(animation,1);
 					 auto action = Animate::create(animation);
@@ -327,9 +331,11 @@ void MainGameScene::setJudgeAnimation(Animation* animation,int i)
 	{
 		judge = "Judge\\perfect";
 	}
+
 	animation->addSpriteFrameWithFile(judge+"1.png");
 	animation->addSpriteFrameWithFile(judge+"2.png");
 	animation->addSpriteFrameWithFile(judge+"3.png");
 	animation->setRestoreOriginalFrame(true);
 	animation->setDelayPerUnit(0.1f);//设置动画的间隔时间
+	
 }
