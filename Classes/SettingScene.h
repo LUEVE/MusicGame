@@ -17,6 +17,7 @@ public:
 	void SliderEffectCallBack(Ref *pSender, Slider::EventType type);
 
 	CREATE_FUNC(SettingScene);
+
 };
 
 #endif // __SETTING_SCENE_H__
