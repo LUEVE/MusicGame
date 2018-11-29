@@ -41,9 +41,22 @@ bool StartScene::init()
 	// Create the main menu
 	this->createMenu();
 
+	// Get default setting
+	auto userdata = UserDefault::sharedUserDefault();
+
+	// Set BGM
 	auto audio = SimpleAudioEngine::getInstance();
 	audio->playBackgroundMusic("bgm.mp3", true);
-	audio->setBackgroundMusicVolume(0.75);
+
+	// Set BGM and Effect volume
+	audio->setBackgroundMusicVolume(userdata->getFloatForKey("backgroundmusic"));
+	audio->setEffectsVolume(userdata->getFloatForKey("soundeffect"));
+	if (userdata->getBoolForKey("backgroundmusic_on") == false) {
+		audio->setBackgroundMusicVolume(0.0f);
+	}
+	if (userdata->getBoolForKey("soundeffect_on") == false) {
+		audio->setEffectsVolume(0.0f);
+	}
 
 	return true;
 }

@@ -250,6 +250,13 @@ public:
      */
     virtual void unloadEffect(const char* filePath);
 
+	
+private:
+	/*
+	@zengnuo
+	*/
+	float m_effectsVolume;
+
 protected:
     /**
     * Constructor of SimpleAudioEngine.
