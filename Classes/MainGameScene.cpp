@@ -116,11 +116,9 @@ bool MainGameScene::init()
 		return false;
 	}
 
-;
-
-	this->comboNumber = 0;
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	// combo区
+	this->comboNumber = 0;
 	comboPlace = SG_Note::create("combo1.PNG");
 	comboPlace->setPosition(Vec2(visibleSize.width / 6 * 4, visibleSize.height / 6 * 1));
 	this->addChild(comboPlace);
@@ -129,6 +127,15 @@ bool MainGameScene::init()
 	this->comboNumberLabel->setPosition(Vec2(visibleSize.width / 6 * 4 + 100, visibleSize.height / 6 * 1));
 	this->addChild(this->comboNumberLabel);
 
+	// 分数区
+	this->gameScore = 0;
+	string s_gameScore = to_string(gameScore);
+	this->gameScoreLabel = Label::createWithSystemFont(s_gameScore, "Consolas", 30);
+	this->gameScoreLabel->setPosition(Vec2(visibleSize.width / 5 * 4 + 100, visibleSize.height / 10 * 9));
+	this->addChild(this->gameScoreLabel);
+
+	this->addedGameScoreLabel = Label::createWithSystemFont("+", "Consolas", 30);
+	this->addChild(this->addedGameScoreLabel);
 
 	// 判断区
 	vector<Sprite*> judges = {SG_Note::create("NoteResources/red.png"), SG_Note::create("NoteResources/red.png"),
@@ -163,6 +170,7 @@ bool MainGameScene::init()
 		// log("%d", notefly);
 		auto checkNote = [&](int which)
 		{
+			long long addedScore = 0;
 			auto &vec = game.notes[which];
 			bool judgeFlag = true;
 			for (auto it = vec.begin(); it != vec.end(); ) {
@@ -194,6 +202,17 @@ bool MainGameScene::init()
 					it = vec.erase(it);
 					// lyw 计数combo
 					this->comboNumber++;
+					// lxs 增加分数
+					if(comboNumber > 100) {
+						addedScore = SG_Game::GOODSCORE_100;
+					}
+					else if(comboNumber > 50) {
+						addedScore = SG_Game::GOODSCORE_50;
+					}
+					else {
+						addedScore = SG_Game::GOODSCORE;
+					}
+					this->gameScore += addedScore;
 				 	judgeFlag = true;
 					break;
 
@@ -209,6 +228,17 @@ bool MainGameScene::init()
 					 it = vec.erase(it);
 					 // lyw 计数combo
 					 this->comboNumber++;
+					 // lxs 增加分数
+					 if (comboNumber > 100) {
+						 addedScore = SG_Game::GREATSCORE_100;
+					 }
+					 else if (comboNumber > 50) {
+						 addedScore = SG_Game::GREATSCORE_50;
+					 }
+					 else {
+						 addedScore = SG_Game::GREATSCORE;
+					 }
+					 this->gameScore += addedScore;
 					 judgeFlag = true;
 					 break;
 				 }
@@ -224,6 +254,17 @@ bool MainGameScene::init()
 					 it = vec.erase(it);
 					 // lyw 计数combo
 					 this->comboNumber++;
+					 // lxs 增加分数
+					 if (comboNumber > 100) {
+						 addedScore = SG_Game::PERFECTSCORE_100;
+					 }
+					 else if (comboNumber > 50) {
+						 addedScore = SG_Game::PERFECTSCORE_50;
+					 }
+					 else {
+						 addedScore = SG_Game::PERFECTSCORE;
+					 }
+					 this->gameScore += addedScore;
 					 judgeFlag = true;
 					 break;
 				 }
@@ -246,6 +287,27 @@ bool MainGameScene::init()
 			this->comboNumberLabel = Label::createWithSystemFont(to_string(this->comboNumber), "Arial", 30);
 			this->comboNumberLabel->setPosition(Vec2(visibleSize.width / 6 * 4 + 100, visibleSize.height / 6 * 1));
 			this->addChild(comboNumberLabel);
+
+			gameScoreLabel->removeFromParent();
+			this->gameScoreLabel = Label::createWithSystemFont(to_string(this->gameScore), "Consolas", 30);
+			this->gameScoreLabel->setPosition(Vec2(visibleSize.width / 5 * 4 + 100, visibleSize.height / 10 * 9));
+			this->addChild(this->gameScoreLabel);
+
+			addedGameScoreLabel->removeFromParent();
+			this->addedGameScoreLabel = Label::createWithSystemFont("+" + to_string(addedScore), "Consolas", 30);
+			if (addedScore) {
+				this->addedGameScoreLabel->setPosition(Vec2(visibleSize.width / 5 * 4 + 100, visibleSize.height / 20 * 17));
+			}
+			this->addChild(this->addedGameScoreLabel);
+
+			auto moveUp = MoveBy::create(0.2, Vec2(0, visibleSize.height / 40));
+			auto moveDown = MoveBy::create(0.2, Vec2(0, visibleSize.height / 40));
+			auto fadeIn = FadeIn::create(0.2f);
+			auto fadeOut = FadeOut::create(0.2f);
+			auto showSpawn = Spawn::createWithTwoActions(moveUp, fadeIn);
+			auto disappearSpawn = Spawn::createWithTwoActions(moveDown, fadeOut);
+			auto addScoreAction = Sequence::create(showSpawn, disappearSpawn, nullptr);
+			this->addedGameScoreLabel->runAction(addScoreAction);
 		};
 
 

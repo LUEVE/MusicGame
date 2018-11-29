@@ -17,12 +17,13 @@ public:
 	void btnBackCallback(Ref * pSender);
 	void setJudgeAnimation(Animation* animation, int i);
 	void update(float dt);
-	cocos2d::Label*comboNumberLabel;
+	cocos2d::Label*comboNumberLabel, *gameScoreLabel, *addedGameScoreLabel;
 	SG_Note* comboPlace;
 	CREATE_FUNC(MainGameScene);
 
 	SG_Game game;
 	int comboNumber = 0;
+	long long gameScore = 0;
 };
 
 #endif // __MAINGAME_SCENE_H__
