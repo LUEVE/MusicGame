@@ -3,11 +3,11 @@
 // #include "Block/SG_BlockF91.h"
 #include "Block/SG_Note.h"
 #include "PauseScene.h"
+#include "ResultScene.h"
 USING_NS_CC;
 
 Scene* MainGameScene::createScene()
 {
-
 	return MainGameScene::create();
 }
 
@@ -76,6 +76,15 @@ void MainGameScene::update(float dt)
 		this->addChild(comboPlace);
 	}
 
+
+	// 调整结束时间
+	this->now_time = time(NULL);
+	if(this->now_time - this->start_time > MAX_RUNNING_TIME) {
+		Director::getInstance()->popScene();
+		ResultScene* resultScene = ResultScene::createScene();
+		resultScene->setGame(this->game);
+		Director::getInstance()->pushScene(resultScene);
+	}
 }
 
 bool MainGameScene::CreatAllSpirtInSong()
@@ -116,6 +125,9 @@ bool MainGameScene::init()
 		return false;
 	}
 
+	// 记录时间
+	start_time = time(NULL);
+
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	// combo区
 	this->comboNumber = 0;
@@ -128,8 +140,8 @@ bool MainGameScene::init()
 	this->addChild(this->comboNumberLabel);
 
 	// 分数区
-	this->gameScore = 0;
-	string s_gameScore = to_string(gameScore);
+	this->game.gameScore = 0;
+	string s_gameScore = to_string(game.gameScore);
 	this->gameScoreLabel = Label::createWithSystemFont(s_gameScore, "Consolas", 30);
 	this->gameScoreLabel->setPosition(Vec2(visibleSize.width / 5 * 4 + 100, visibleSize.height / 10 * 9));
 	this->addChild(this->gameScoreLabel);
@@ -145,6 +157,9 @@ bool MainGameScene::init()
 	{
 		judges[i]->setPosition(Vec2(visibleSize.width / 4 * i + 100, 200));
 		this->addChild(judges[i]);
+	}
+	for(int i = 0; i < JUDGE_NUM; i++) {
+		this->game.judgeCount[i] = 0;
 	}
 
 	// 掉落块
@@ -188,6 +203,8 @@ bool MainGameScene::init()
 					it = vec.erase(it);
 					// lyw 计数combo
 					this->comboNumber = 0;
+					// lxs 计算游戏判定总数
+					this->game.judgeCount[MISS]++;
 					break;
 				}
 				else if (dist((*it)->getPosition(), judges[which]->getPosition()) <= SG_Game::GOODPLACE && dist((*it)->getPosition(), judges[which]->getPosition()) >=SG_Game::GREATPLACE) // good
@@ -212,8 +229,10 @@ bool MainGameScene::init()
 					else {
 						addedScore = SG_Game::GOODSCORE;
 					}
-					this->gameScore += addedScore;
+					this->game.gameScore += addedScore;
 				 	judgeFlag = true;
+					// lxs 计算游戏判定总数
+					this->game.judgeCount[GOOD]++;
 					break;
 
 				}
@@ -238,8 +257,10 @@ bool MainGameScene::init()
 					 else {
 						 addedScore = SG_Game::GREATSCORE;
 					 }
-					 this->gameScore += addedScore;
+					 this->game.gameScore += addedScore;
 					 judgeFlag = true;
+					 // lxs 计算游戏判定总数
+					 this->game.judgeCount[GREAT]++;
 					 break;
 				 }
 				 else if ( dist((*it)->getPosition(), judges[which]->getPosition()) <= SG_Game::PERFECTPLACE)
@@ -264,8 +285,10 @@ bool MainGameScene::init()
 					 else {
 						 addedScore = SG_Game::PERFECTSCORE;
 					 }
-					 this->gameScore += addedScore;
+					 this->game.gameScore += addedScore;
 					 judgeFlag = true;
+					 // lxs 计算游戏判定总数
+					 this->game.judgeCount[PERFECT]++;
 					 break;
 				 }
 				 else
@@ -289,7 +312,7 @@ bool MainGameScene::init()
 			this->addChild(comboNumberLabel);
 
 			gameScoreLabel->removeFromParent();
-			this->gameScoreLabel = Label::createWithSystemFont(to_string(this->gameScore), "Consolas", 30);
+			this->gameScoreLabel = Label::createWithSystemFont(to_string(this->game.gameScore), "Consolas", 30);
 			this->gameScoreLabel->setPosition(Vec2(visibleSize.width / 5 * 4 + 100, visibleSize.height / 10 * 9));
 			this->addChild(this->gameScoreLabel);
 
@@ -297,6 +320,8 @@ bool MainGameScene::init()
 			this->addedGameScoreLabel = Label::createWithSystemFont("+" + to_string(addedScore), "Consolas", 30);
 			if (addedScore) {
 				this->addedGameScoreLabel->setPosition(Vec2(visibleSize.width / 5 * 4 + 100, visibleSize.height / 20 * 17));
+			} else {
+				this->addedGameScoreLabel->setPosition(Vec2(-100, -100));
 			}
 			this->addChild(this->addedGameScoreLabel);
 
@@ -330,17 +355,15 @@ bool MainGameScene::init()
 			checkNote(3);
 			break;
 		case EventKeyboard::KeyCode::KEY_ESCAPE:
-			/*auto visibleSize = Director::getInstance()->getVisibleSize();
-			auto *renderTexture = RenderTexture::create(visibleSize.width, visibleSize.height);
-			renderTexture->begin();
-			Director::getInstance()->getRunningScene()->visit();
-			renderTexture->end();
-			auto pauseScene = PauseScene::createScene(renderTexture);
-			Director::getInstance()->pushScene(pauseScene);*/
+			// auto visibleSize = Director::getInstance()->getVisibleSize();
+			// auto renderTexture = RenderTexture::create(visibleSize.width, visibleSize.height);
+			// renderTexture->begin();
+			// Director::getInstance()->getRunningScene()->visit();
+			// renderTexture->end();
+			// auto pauseScene = PauseScene::createScene();
+			// pauseScene->setRenderTexture(renderTexture);
+			// Director::getInstance()->pushScene(pauseScene);
 			Director::getInstance()->pushScene(PauseScene::createScene());
-			break;
-		default:
-			log("default pressed");
 			break;
 		}
 	};
@@ -372,15 +395,15 @@ void MainGameScene::btnBackCallback(Ref* pSender)
 void MainGameScene::setJudgeAnimation(Animation* animation,int i)
 {
 	string judge;
-	if (i==4)
+	if (i==MISS)
 	{
 		judge = "Judge\\miss";
 	}
-	else if (i == 3)
+	else if (i == GOOD)
 	{
 		judge = "Judge\\good";
 	}
-	else if(i == 2)
+	else if(i == GREAT)
 	{
 		judge = "Judge\\great";
 	}

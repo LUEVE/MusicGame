@@ -18,6 +18,7 @@ public:
 	void fuck(Ref* sender, CheckBox::EventType type);
 
 	CREATE_FUNC(SettingScene);
+
 };
 
 #endif // __SETTING_SCENE_H__

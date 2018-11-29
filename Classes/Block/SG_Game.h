@@ -3,6 +3,12 @@
 #include <vector>
 #include "SG_Note.h"
 
+#define MISS 4
+#define GOOD 3
+#define GREAT 2
+#define PERFECT 1
+#define JUDGE_NUM (4+1)
+
 USING_NS_CC;
 
 class SG_Game
@@ -25,7 +31,9 @@ public:
 	const static int GOODSCORE_100 = 300;
 	const static int GREATSCORE_100 = 350;
 	const static int PERFECTSCORE_100 = 400;
-
+	
+	long long gameScore = 0;
+	int judgeCount[JUDGE_NUM];
 	std::vector<std::vector<SG_Note*>> notes;
 	SG_Game();
 private:
