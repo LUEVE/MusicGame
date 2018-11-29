@@ -55,6 +55,7 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\CreatorScene.cpp">
+    </ClCompile>
     <ClCompile Include="..\Classes\GeneratorScene.cpp">
       <Filter>src</Filter>
     </ClCompile>
