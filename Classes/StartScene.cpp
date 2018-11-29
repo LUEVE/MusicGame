@@ -3,7 +3,6 @@
 #include "MainGameScene.h"
 #include "AboutScene.h"
 #include "SelectScene.h"
-#include "CreatorScene.h"
 #include "SimpleAudioEngine.h"
 #include "GeneratorScene.h"
 #include "testScene.h"
@@ -72,20 +71,23 @@ void StartScene::createMenu()
 	auto startItem = this->createSprite("START", CC_CALLBACK_1(StartScene::menuStartCallback, this));
 	auto settingItem = this->createSprite("SETTING", CC_CALLBACK_1(StartScene::menuSettingCallback, this));
 	auto creatorItem = this->createSprite("CREATOR", CC_CALLBACK_1(StartScene::menuCreatorCallback, this));
+	auto testItem = this->createSprite("TEST", CC_CALLBACK_1(StartScene::menuTestCallback, this));
 	auto aboutItem = this->createSprite("ABOUT", CC_CALLBACK_1(StartScene::menuAboutCallback, this));
 	auto exitItem = this->createSprite("EXIT", CC_CALLBACK_1(StartScene::menuExitCallback, this));
 
 	Vector<MenuItem*> menuItems;
 
-	startItem->setPosition(Vec2(visibleSize.width / 2 - 75, visibleSize.height / 2 + 220));
-	settingItem->setPosition(Vec2(visibleSize.width / 2 + 75, visibleSize.height / 2 + 110));
-	creatorItem->setPosition(Vec2(visibleSize.width / 2 - 75, visibleSize.height / 2));
-	aboutItem->setPosition(Vec2(visibleSize.width / 2 + 75, visibleSize.height / 2 - 110));
-	exitItem->setPosition(Vec2(visibleSize.width / 2 - 75, visibleSize.height / 2 - 220));
+	startItem->setPosition(Vec2(visibleSize.width / 2 - 75, visibleSize.height / 2 + 255));
+	settingItem->setPosition(Vec2(visibleSize.width / 2 + 75, visibleSize.height / 2 + 155));
+	creatorItem->setPosition(Vec2(visibleSize.width / 2 - 75, visibleSize.height / 2 + 55));
+	testItem->setPosition(Vec2(visibleSize.width / 2 + 75, visibleSize.height / 2 - 55));
+	aboutItem->setPosition(Vec2(visibleSize.width / 2 - 75, visibleSize.height / 2 - 155));
+	exitItem->setPosition(Vec2(visibleSize.width / 2 + 75, visibleSize.height / 2 - 255));
 
 	menuItems.pushBack(startItem);
 	menuItems.pushBack(settingItem);
 	menuItems.pushBack(creatorItem);
+	menuItems.pushBack(testItem);
 	menuItems.pushBack(aboutItem);
 	menuItems.pushBack(exitItem);
 
@@ -125,25 +127,33 @@ void StartScene::menuStartCallback(Ref* pSender)
 void StartScene::menuSettingCallback(Ref* pSender)
 {
 	log("Setting Button");
-	auto settingScene = GeneratorScene::create();
+	auto settingScene = SettingScene::create();
 	Director::getInstance()->pushScene(settingScene);
 }
 
 void StartScene::menuCreatorCallback(Ref* pSender)
 {
 	log("Creator Button");
-	auto creatorScene = CreatorScene::createScene();
+	auto creatorScene = GeneratorScene::create();
 	Director::getInstance()->pushScene(creatorScene);
+}
+
+void StartScene::menuTestCallback(cocos2d::Ref * pSender)
+{
+	log("Test Button");
+	auto aboutScene = testScene::create();
+	Director::getInstance()->pushScene(aboutScene);
 }
 
 void StartScene::menuAboutCallback(Ref* pSender)
 {
 	log("About Button");
-	auto testScene = testScene::create();
-	Director::getInstance()->pushScene(testScene);
+	auto aboutScene = AboutScene::create();
+	Director::getInstance()->pushScene(aboutScene);
 }
 
 void StartScene::menuExitCallback(Ref* pSender)
 {
+	log("Exit Button");
 	Director::getInstance()->end();
 }

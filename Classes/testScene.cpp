@@ -41,13 +41,14 @@ bool testScene::init()
 		this->addChild(judges[i]);
 	}
 
-	auto backButton = ui::Button::create("back.png", "back_selected.png", "back_disabled.png");
-
-	backButton->setPosition(Vec2(origin.x + 100, origin.y + 50));
-	backButton->addClickEventListener([](Ref *pSender) { 
-		Director::getInstance()->popScene(); });
-
-	this->addChild(backButton);
+	// backbutton
+	auto sprite_back = Sprite::create("back.png");
+	auto sprite_backselected = Sprite::create("back_selected.png");
+	auto menuBackItem = MenuItemSprite::create(sprite_back, sprite_backselected, sprite_back, CC_CALLBACK_1(testScene::menuBackCallBack, this));
+	menuBackItem->setPosition(Vec2(30, visibleSize.height - 30));
+	auto menu0 = Menu::create(menuBackItem, NULL);
+	menu0->setPosition(Vec2::ZERO);
+	this->addChild(menu0);
 
 	scheduleUpdate();
 	return true;
@@ -123,6 +124,11 @@ void testScene::judgeNotes()
 			else ++it;
 		}
 	}
+}
+
+void testScene::menuBackCallBack(Ref * pSender)
+{
+	Director::getInstance()->popScene();
 }
 
 void testScene::oneFrameForward()

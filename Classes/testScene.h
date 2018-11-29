@@ -24,6 +24,8 @@ public:
 	void appearNotes();
 	void judgeNotes();
 
+	void menuBackCallBack(Ref * pSender);
+
 	CREATE_FUNC(testScene);
 
 

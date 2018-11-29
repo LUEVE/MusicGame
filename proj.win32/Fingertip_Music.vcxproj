@@ -155,7 +155,6 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\Block\SG_Game.cpp" />
     <ClCompile Include="..\Classes\Block\SG_Note.cpp" />
-    <ClCompile Include="..\Classes\CreatorScene.cpp" />
     <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
     <ClCompile Include="..\Classes\MainGameScene.cpp" />
     <ClCompile Include="..\Classes\PauseScene.cpp" />
@@ -172,7 +171,6 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\AppDelegate.h" />
     <ClInclude Include="..\Classes\Block\SG_Game.h" />
     <ClInclude Include="..\Classes\Block\SG_Note.h" />
-    <ClInclude Include="..\Classes\CreatorScene.h" />
     <ClInclude Include="..\Classes\PauseScene.h" />
     <ClInclude Include="..\Classes\ResultScene.h" />
     <ClInclude Include="..\Classes\Block\SG_NoteInfo.h" />
