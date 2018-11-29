@@ -3,6 +3,7 @@
 // #include "Block/SG_BlockF91.h"
 #include "Block/SG_Note.h"
 #include "PauseScene.h"
+
 USING_NS_CC;
 
 Scene* MainGameScene::createScene()
@@ -14,10 +15,10 @@ Scene* MainGameScene::createScene()
 Vector<Sprite*> AllSpirtInASong(6);
 
 int flag = 0;
+float nowtime = 0;
 
 void MainGameScene::update(float dt)
 {
-	
 	static mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 	static uniform_int_distribution<int> genProb(1, 100), genPos(0, SG_Game::WAYS - 1), genSpeed(10,20);
 	auto visibleSize = Director::getInstance()->getVisibleSize();
@@ -54,14 +55,14 @@ void MainGameScene::update(float dt)
 		}
 	}
 	// 改变combo状态
-	if(comboNumber < 3)
+	if(comboNumber < game.COMBOSTATE_ONE_NUM)
 	{
 		comboPlace->removeFromParent();
 		comboPlace = SG_Note::create("combo1.PNG");
 		comboPlace->setPosition(Vec2(visibleSize.width / 6 * 4, visibleSize.height / 6 * 1));
 		this->addChild(comboPlace);
 	}
-	else if(comboNumber >= 3 && comboNumber <= 5)
+	else if(comboNumber >= game.COMBOSTATE_ONE_NUM && comboNumber <= game.COMBOSTATE_TWO_NUM)
 	{
 		comboPlace->removeFromParent();
 		comboPlace = SG_Note::create("combo2.PNG");
