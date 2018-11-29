@@ -51,6 +51,12 @@
     <ClCompile Include="..\Classes\PauseScene.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\GeneratorScene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\testScene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -85,6 +91,15 @@
     </ClInclude>
     <ClInclude Include="..\Classes\PauseScene.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\GeneratorScene.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\testScene.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Block\SG_NoteInfo.h">
+      <Filter>src\block</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
