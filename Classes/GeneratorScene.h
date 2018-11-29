@@ -18,6 +18,9 @@ public:
 	bool init() override;
 	void writeNoteOut(int which);
 	void update(float dt) override;
+
+	void menuBackCallBack(Ref *pSender);
+
 	CREATE_FUNC(GeneratorScene);
 
 	GeneratorScene();

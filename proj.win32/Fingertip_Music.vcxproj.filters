@@ -54,8 +54,6 @@
     <ClCompile Include="..\Classes\ResultScene.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\CreatorScene.cpp">
-    </ClCompile>
     <ClCompile Include="..\Classes\GeneratorScene.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -98,9 +96,6 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\ResultScene.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\CreatorScene.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\GeneratorScene.h">

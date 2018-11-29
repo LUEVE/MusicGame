@@ -2,6 +2,7 @@
 #include "ui/UIButton.h"
 #include "SimpleAudioEngine.h"
 #include "Block/SG_Note.h"
+#include "testScene.h"
 
 USING_NS_CC;
 using namespace std;
@@ -26,13 +27,14 @@ bool GeneratorScene::init()
 
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	auto backButton = ui::Button::create("back.png", "back_selected.png", "back_disabled.png");
-
-	backButton->setPosition(Vec2(origin.x + 100, origin.y + 50));
-	backButton->addClickEventListener([](Ref *pSender) { 
-		Director::getInstance()->popScene(); });
-
-	this->addChild(backButton);
+	// backbutton
+	auto sprite_back = Sprite::create("back.png");
+	auto sprite_backselected = Sprite::create("back_selected.png");
+	auto menuBackItem = MenuItemSprite::create(sprite_back, sprite_backselected, sprite_back, CC_CALLBACK_1(GeneratorScene::menuBackCallBack, this));
+	menuBackItem->setPosition(Vec2(30, visibleSize.height - 30));
+	auto menu0 = Menu::create(menuBackItem, NULL);
+	menu0->setPosition(Vec2::ZERO);
+	this->addChild(menu0);
 
 	vector<Sprite*> judges = {SG_Note::create("NoteResources/red.png"), SG_Note::create("NoteResources/red.png"),
 		SG_Note::create("NoteResources/red.png"), SG_Note::create("NoteResources/red.png")};
@@ -153,6 +155,11 @@ void GeneratorScene::update(float dt)
 		log("%d %d", frameShouldBe, frameCnt);
 		oneFrameForward();
 	}
+}
+
+void GeneratorScene::menuBackCallBack(Ref * pSender)
+{
+	Director::getInstance()->popScene();
 }
 
 void GeneratorScene::writeNoteOut(int which)
