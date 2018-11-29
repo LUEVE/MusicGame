@@ -15,7 +15,6 @@ using namespace std;
 class MainGameScene : public cocos2d::Scene
 {
 public:
-	cocos2d::Label*comboNumberLabel;
 	SG_Note* comboPlace;
 	SG_Game game;
 	int comboNumber = 0;
@@ -27,11 +26,8 @@ public:
 	void setJudgeAnimation(Animation* animation, int i);
 	void update(float dt);
 	cocos2d::Label*comboNumberLabel, *gameScoreLabel, *addedGameScoreLabel;
-	SG_Note* comboPlace;
 	CREATE_FUNC(MainGameScene);
 
-	SG_Game game;
-	int comboNumber = 0;
 	time_t start_time, now_time;
 };
 
