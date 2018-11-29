@@ -105,11 +105,13 @@ void PauseScene::menuSettingCallback(Ref* pSender)
 	log("Setting Button");
 	auto settingScene = SettingScene::createScene();
 	Director::getInstance()->pushScene(settingScene);
+
 }
 
 void PauseScene::menuBackCallback(Ref* pSender)
 {
 	log("Back Button");
+	Director::getInstance()->popScene();
 	Director::getInstance()->popScene();
 }
 

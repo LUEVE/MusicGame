@@ -487,7 +487,7 @@ void MainGameScene::appearNotes()
 	 
 	while (noteInfo.appearTime == frameCnt)
 	{
-		auto newNote = SG_Note::create("NoteResources/white.jpg", noteInfo.speed, noteInfo.appearTime, noteInfo.judgeTime, noteInfo.whichWay);
+		auto newNote = SG_Note::create("greenhat.png", noteInfo.speed, noteInfo.appearTime, noteInfo.judgeTime, noteInfo.whichWay);
 		newNote->setPosition(Vec2(194 * noteInfo.whichWay + 220, 700));
 		
 		auto moveD = MoveBy::create(1 / 60.0, Vec2(0, -noteInfo.speed));
