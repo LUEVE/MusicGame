@@ -43,6 +43,7 @@ void MainGameScene::update(float dt)
 	}
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	// 判断出界
+
 	for (int i = 0; i < SG_Game::WAYS; ++i)
 	{
 		auto &vec = game.notes[i];
@@ -214,8 +215,6 @@ bool MainGameScene::init()
 				{
 					// music affect
 					CocosDenshion::SimpleAudioEngine::getInstance()->playEffect(musicEffect[3].c_str());
-					judgeFlag == false;
-					log("%d", judgeFlag);
 					auto animation = Animation::create();
 					setJudgeAnimation(animation, 4);
 					auto action = Animate::create(animation);
@@ -411,13 +410,6 @@ void MainGameScene::setJudgeAnimation(Animation* animation,int i)
 	animation->setDelayPerUnit(0.1f);//设置动画的间隔时间
 	
 }
-
-void MainGameScene::oneFrameForward()
-{
-	++frameCnt;
-	appearNotes();
-}
-
 void MainGameScene::appearNotes()
 {
 	if (game.allNotes.empty()) return;
@@ -426,12 +418,12 @@ void MainGameScene::appearNotes()
 
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	auto &noteInfo = game.allNotes.front();
-	 
+
 	while (noteInfo.appearTime == frameCnt)
 	{
 		auto newNote = SG_Note::create("greenhat.png", noteInfo.speed, noteInfo.appearTime, noteInfo.judgeTime, noteInfo.whichWay);
 		newNote->setPosition(Vec2(194 * noteInfo.whichWay + 220, 700));
-		
+
 		// 调用 note下落的action
 		newNote->runAction(SG_Action::notesAction(noteInfo.speed));
 		this->addChild(newNote);
@@ -443,6 +435,16 @@ void MainGameScene::appearNotes()
 		noteInfo = game.allNotes.front();
 	}
 }
+
+// 辅助函数 -----
+
+void MainGameScene::oneFrameForward()
+{
+	++frameCnt;
+	appearNotes();
+}
+
+
 
 double MainGameScene::getDuration(const std::chrono::steady_clock::time_point &start, const std::chrono::steady_clock::time_point &end)
 {
@@ -476,3 +478,5 @@ double MainGameScene::getDuration(const std::chrono::steady_clock::time_point &s
 	 }
 	 this->addChild(this->addedGameScoreLabel);
 }
+
+ // 辅助函数   --
