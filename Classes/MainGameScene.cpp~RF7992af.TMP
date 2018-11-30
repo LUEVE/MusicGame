@@ -3,7 +3,7 @@
 // #include "Block/SG_BlockF91.h"
 #include "Block/SG_Note.h"
 #include "PauseScene.h"
-#include "Block/SG_Action.h"
+
 #include "ResultScene.h"
 USING_NS_CC;
 MainGameScene::MainGameScene(): Scene(), scoreIfs("D:\\score.txt"){}
@@ -41,7 +41,25 @@ void MainGameScene::update(float dt)
 		log("%d %d", frameShouldBe, frameCnt);
 		oneFrameForward();
 	}
+	//static mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+	//static uniform_int_distribution<int> genProb(1, 100), genPos(0, SG_Game::WAYS - 1), genSpeed(10,20);
 	auto visibleSize = Director::getInstance()->getVisibleSize();
+	//if (genProb(rng) <= 2)
+	//{
+	//	//SG_Note* newNote = SG_Note::create("NoteResources/white.jpg");
+	//	SG_Note* newNote = SG_Note::create("greenhat.png");
+	//	int pos = genPos(rng);
+	//	newNote->setPosition(Vec2(194 * pos + 220, 700));
+	//	//194 * i + 220,
+	//	auto moveD = MoveBy::create(0.1, Vec2(0, -genSpeed(rng)));
+	//	auto fall = RepeatForever::create(moveD);
+	//	newNote->runAction(fall);
+
+	//	this->addChild(newNote);
+
+	//	game.notes[pos].push_back(newNote);
+	//}
+
 	// 判断出界
 	for (int i = 0; i < SG_Game::WAYS; ++i)
 	{
@@ -56,7 +74,6 @@ void MainGameScene::update(float dt)
 				this->comboNumberLabel = Label::createWithSystemFont(to_string(this->comboNumber), "Arial", 30);
 				this->comboNumberLabel->setPosition(Vec2(visibleSize.width / 6 * 4 + 100, visibleSize.height / 6 * 1));
 				this->addChild(comboNumberLabel);
-				this->game.judgeCount[MISS]++;
 			}
 			else it++;
 		}
@@ -84,6 +101,15 @@ void MainGameScene::update(float dt)
 		this->addChild(comboPlace);
 	}
 
+
+	// 调整结束时间
+	//this->now_time = time(NULL);
+	//if(this->now_time - this->start_time > MAX_RUNNING_TIME) {
+	//	Director::getInstance()->popScene();
+	//	ResultScene* resultScene = ResultScene::createScene();
+	//	resultScene->setGame(this->game);
+	//	Director::getInstance()->pushScene(resultScene);
+	//}
 }
 
 bool MainGameScene::CreatAllSpirtInSong()
@@ -116,46 +142,47 @@ static void restoreFrame(Sprite *s)
 	s->setSpriteFrame(SpriteFrame::create("NoteResources/red.png", Rect(0, 0, 47, 46)));
 }
 
-void MainGameScene::preloadSoundResource(CocosDenshion::SimpleAudioEngine *sae)
-{
-	sae->preloadBackgroundMusic(bgmSongName.c_str());
-	int tempNum = musicEffect.size();
-	for (int i = 0; i < tempNum; ++i)
-	{
-		sae->preloadEffect(musicEffect[i].c_str());
-	}
-}
 
 bool MainGameScene::init()
 {
 	if (!Scene::init())
 	{
 		return false;
-	} 
-	// -- 初始化资源 -- begin
+	}
 
 	// background
-
 	auto mainGame_bg = Sprite::create("mainGame_bg.png");
 	mainGame_bg->setAnchorPoint(Vec2(0, 0));
 	mainGame_bg->setPosition(Vec2(0, 0));
 	this->addChild(mainGame_bg);
-	// preload sound resource
 
 	auto sae = CocosDenshion::SimpleAudioEngine::getInstance();
-	preloadSoundResource(sae);
+
+	// preload sound resource
+	sae->preloadBackgroundMusic("Wiwi Kuan- Made in PixiTracker.mp3");
+	sae->preloadEffect("MusicEffect\\Effect_cai.mp3");
+	sae->preloadEffect("MusicEffect\\Effect_ruo.mp3");
+	sae->preloadEffect("MusicEffect\\Effect_xing.mp3");
+	sae->preloadEffect("MusicEffect\\Effect_qiang.mp3");
+
 	// Play music
-
 	sae->stopBackgroundMusic();
-	sae->playBackgroundMusic(bgmSongName.c_str(), false);
-	// allnote in song push in scene
+	sae->playBackgroundMusic("Wiwi Kuan- Made in PixiTracker.mp3",false);
 
+	// --
 	int judgeTime, whichWay, speed, type;
 	while (scoreIfs >> judgeTime >> whichWay >> speed >> type)
 	{
 		game.allNotes.push({ judgeTime, whichWay, speed });
 	}
-	// combo
+
+	startPoint = chrono::steady_clock::now();
+	
+	// 记录时间
+//	start_time = time(NULL);
+
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	// combo区
 	this->comboNumber = 0;
 	comboPlace = SG_Note::create("combo1.PNG");
 	comboPlace->setPosition(Vec2(visibleSize.width / 6 * 4, visibleSize.height / 6 * 1));
@@ -165,7 +192,7 @@ bool MainGameScene::init()
 	this->comboNumberLabel->setPosition(Vec2(visibleSize.width / 6 * 4 + 100, visibleSize.height / 6 * 1));
 	this->addChild(this->comboNumberLabel);
 
-	// score
+	// 分数区
 	this->game.gameScore = 0;
 	string s_gameScore = to_string(game.gameScore);
 	this->gameScoreLabel = Label::createWithSystemFont(s_gameScore, "Consolas", 30);
@@ -175,27 +202,33 @@ bool MainGameScene::init()
 	this->addedGameScoreLabel = Label::createWithSystemFont("+", "Consolas", 30);
 	this->addChild(this->addedGameScoreLabel);
 
-	// judge place
-	vector<Sprite*> judges = { SG_Note::create("NoteResources/red.png"), SG_Note::create("NoteResources/red.png"),
-		SG_Note::create("NoteResources/red.png"), SG_Note::create("NoteResources/red.png") };
-
+	// 判断区
+	vector<Sprite*> judges = {SG_Note::create("NoteResources/red.png"), SG_Note::create("NoteResources/red.png"),
+		SG_Note::create("NoteResources/red.png"), SG_Note::create("NoteResources/red.png")};
+	
 	for (int i = 0; i < judges.size(); ++i) // initialize judges
 	{
 		judges[i]->setPosition(Vec2(194 * i + 220, 200));
 		this->addChild(judges[i]);
 	}
-
-	// -- 初始化资源 -- end
-
-	
-	// 记录时间
-	startPoint = chrono::steady_clock::now();
-	auto visibleSize = Director::getInstance()->getVisibleSize();
-	this->visibleSize = visibleSize;
-
 	for(int i = 0; i < JUDGE_NUM; i++) {
 		this->game.judgeCount[i] = 0;
 	}
+
+	// 掉落块
+
+	//game.notes[0].push_back(SG_Note::create("NoteResources/white.jpg"));
+	//game.notes[1].push_back(SG_Note::create("NoteResources/white.jpg"));
+	//game.notes[2].push_back(SG_Note::create("NoteResources/white.jpg"));
+	//game.notes[3].push_back(SG_Note::create("NoteResources/white.jpg"));
+	//for (int i = 0; i < SG_Game::WAYS; ++i) // initialize notes
+	//{
+	//	game.notes[i].front()->setPosition(Vec2(194 * i + 220, 700));
+	//	auto moveD = MoveBy::create(0.1, Vec2(0, -20));
+	//	auto fall = RepeatForever::create(moveD);
+	//	game.notes[i].front()->runAction(fall);
+	//	this->addChild(game.notes[i].front());
+	//}
 
 	// 键盘事件
 	auto listen1 = EventListenerKeyboard::create();
@@ -213,9 +246,8 @@ bool MainGameScene::init()
 				if (dist((*it)->getPosition(), judges[which]->getPosition()) <= SG_Game::MISSPLACE && dist((*it)->getPosition(), judges[which]->getPosition()) >= SG_Game::GOODPLACE) // miss
 				{
 					// music affect
-					CocosDenshion::SimpleAudioEngine::getInstance()->playEffect(musicEffect[3].c_str());
+					CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("MusicEffect\\Effect_cai.mp3");
 					judgeFlag == false;
-					log("%d", judgeFlag);
 					auto animation = Animation::create();
 					setJudgeAnimation(animation, 4);
 					auto action = Animate::create(animation);
@@ -231,7 +263,7 @@ bool MainGameScene::init()
 				else if (dist((*it)->getPosition(), judges[which]->getPosition()) <= SG_Game::GOODPLACE && dist((*it)->getPosition(), judges[which]->getPosition()) >=SG_Game::GREATPLACE) // good
 				{
 					// music affect
-					CocosDenshion::SimpleAudioEngine::getInstance()->playEffect(musicEffect[2].c_str());
+					CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("MusicEffect\\Effect_ruo.mp3");
 					auto animation = Animation::create();
 					setJudgeAnimation(animation,3);
 					auto action = Animate::create(animation);
@@ -259,7 +291,7 @@ bool MainGameScene::init()
 				}
 				else if(dist((*it)->getPosition(), judges[which]->getPosition()) <= SG_Game::GREATPLACE && dist((*it)->getPosition(), judges[which]->getPosition()) >= SG_Game::PERFECTPLACE) // perfect
 				{
-					 CocosDenshion::SimpleAudioEngine::getInstance()->playEffect(musicEffect[1].c_str());
+					 CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("MusicEffect\\Effect_xing.mp3");
 					 auto animation = Animation::create();
 					 setJudgeAnimation(animation,2);
 					 auto action = Animate::create(animation);
@@ -286,7 +318,7 @@ bool MainGameScene::init()
 				 }
 				 else if ( dist((*it)->getPosition(), judges[which]->getPosition()) <= SG_Game::PERFECTPLACE)
 				 {
-					 CocosDenshion::SimpleAudioEngine::getInstance()->playEffect(musicEffect[0].c_str());
+					 CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("MusicEffect\\Effect_qiang.mp3");
 					 auto animation = Animation::create();
 					 setJudgeAnimation(animation,1);
 					 auto action = Animate::create(animation);
@@ -318,15 +350,45 @@ bool MainGameScene::init()
 					 ++it;
 					
 				 }
+					// lyw count combo
+
+
+				
 			}
- 
-			// 刷新combo数
-			reFreshComboLebal();
-			// 刷新分数
-			reFreshGameScoreLabel(addedScore);
-			SG_Action::setVisibleSize(visibleSize);
-			// 调用增加分数的actiona
-			this->addedGameScoreLabel->runAction(SG_Action::addScoreAction());
+			if (judgeFlag == false)
+			{
+				this->comboNumber = 0;
+				// 2018.11.30 10:48 lxs:
+				// 漏打也要算miss
+				this->game.judgeCount[MISS]++;
+			}
+			comboNumberLabel->removeFromParent();
+			this->comboNumberLabel = Label::createWithSystemFont(to_string(this->comboNumber), "Arial", 30);
+			this->comboNumberLabel->setPosition(Vec2(visibleSize.width / 6 * 4 + 100, visibleSize.height / 6 * 1));
+			this->addChild(comboNumberLabel);
+
+			gameScoreLabel->removeFromParent();
+			this->gameScoreLabel = Label::createWithSystemFont(to_string(this->game.gameScore), "Consolas", 30);
+			this->gameScoreLabel->setPosition(Vec2(visibleSize.width / 5 * 4 + 100, visibleSize.height / 10 * 9));
+			this->addChild(this->gameScoreLabel);
+
+			addedGameScoreLabel->removeFromParent();
+			this->addedGameScoreLabel = Label::createWithSystemFont("+" + to_string(addedScore), "Consolas", 30);
+			if (addedScore) {
+				this->addedGameScoreLabel->setPosition(Vec2(visibleSize.width / 5 * 4 + 100, visibleSize.height / 20 * 17));
+			} else {
+				this->addedGameScoreLabel->setPosition(Vec2(-100, -100));
+			}
+			this->addChild(this->addedGameScoreLabel);
+
+			auto moveUp = MoveBy::create(0.2, Vec2(0, visibleSize.height / 40));
+			auto moveDown = MoveBy::create(0.2, Vec2(0, visibleSize.height / 40));
+			auto fadeIn = FadeIn::create(0.2f);
+			auto fadeOut = FadeOut::create(0.2f);
+			auto showSpawn = Spawn::createWithTwoActions(moveUp, fadeIn);
+			auto disappearSpawn = Spawn::createWithTwoActions(moveDown, fadeOut);
+			auto addScoreAction = Sequence::create(showSpawn, disappearSpawn, nullptr);
+			this->addedGameScoreLabel->runAction(addScoreAction);
 		};
 
 
@@ -349,6 +411,14 @@ bool MainGameScene::init()
 			checkNote(3);
 			break;
 		case EventKeyboard::KeyCode::KEY_ESCAPE:
+			// auto visibleSize = Director::getInstance()->getVisibleSize();
+			// auto renderTexture = RenderTexture::create(visibleSize.width, visibleSize.height);
+			// renderTexture->begin();
+			// Director::getInstance()->getRunningScene()->visit();
+			// renderTexture->end();
+			// auto pauseScene = PauseScene::createScene();
+			// pauseScene->setRenderTexture(renderTexture);
+			// Director::getInstance()->pushScene(pauseScene);
 			CocosDenshion::SimpleAudioEngine::sharedEngine()->pauseBackgroundMusic();
 			Director::getInstance()->pushScene(PauseScene::createScene());
 			pauseStart = std::chrono::steady_clock::now();
@@ -432,8 +502,9 @@ void MainGameScene::appearNotes()
 		auto newNote = SG_Note::create("greenhat.png", noteInfo.speed, noteInfo.appearTime, noteInfo.judgeTime, noteInfo.whichWay);
 		newNote->setPosition(Vec2(194 * noteInfo.whichWay + 220, 700));
 		
-		// 调用 note下落的action
-		newNote->runAction(SG_Action::notesAction(noteInfo.speed));
+		auto moveD = MoveBy::create(1 / 60.0, Vec2(0, -noteInfo.speed));
+		auto fall = RepeatForever::create(moveD);
+		newNote->runAction(fall);
 		this->addChild(newNote);
 
 		game.notes[noteInfo.whichWay].push_back(newNote);
@@ -449,30 +520,4 @@ double MainGameScene::getDuration(const std::chrono::steady_clock::time_point &s
 	chrono::steady_clock::duration timeSpan = end - start;
 	timeSpan -= pauseDuration;
 	return double(timeSpan.count()) * chrono::steady_clock::period::num / chrono::steady_clock::period::den;
-}
-
- void MainGameScene::reFreshComboLebal()
-{
-	 comboNumberLabel->removeFromParent();
-	 this->comboNumberLabel = Label::createWithSystemFont(to_string(this->comboNumber), "Arial", 30);
-	 this->comboNumberLabel->setPosition(Vec2(this->visibleSize.width / 6 * 4 + 100, this->visibleSize.height / 6 * 1));
-	 this->addChild(comboNumberLabel);
-}
-
- void MainGameScene::reFreshGameScoreLabel(long long addedScore)
-{
-	 gameScoreLabel->removeFromParent();
-	 this->gameScoreLabel = Label::createWithSystemFont(to_string(this->game.gameScore), "Consolas", 30);
-	 this->gameScoreLabel->setPosition(Vec2(visibleSize.width / 5 * 4 + 100, visibleSize.height / 10 * 9));
-	 this->addChild(this->gameScoreLabel);
-
-	 addedGameScoreLabel->removeFromParent();
-	 this->addedGameScoreLabel = Label::createWithSystemFont("+" + to_string(addedScore), "Consolas", 30);
-	 if (addedScore) {
-		 this->addedGameScoreLabel->setPosition(Vec2(visibleSize.width / 5 * 4 + 100, visibleSize.height / 20 * 17));
-	 }
-	 else {
-		 this->addedGameScoreLabel->setPosition(Vec2(-100, -100));
-	 }
-	 this->addChild(this->addedGameScoreLabel);
 }

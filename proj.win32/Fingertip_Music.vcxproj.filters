@@ -60,6 +60,9 @@
     <ClCompile Include="..\Classes\testScene.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Block\SG_Action.cpp">
+      <Filter>src\block</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -105,6 +108,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Block\SG_NoteInfo.h">
+      <Filter>src\block</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Block\SG_Action.h">
       <Filter>src\block</Filter>
     </ClInclude>
   </ItemGroup>
