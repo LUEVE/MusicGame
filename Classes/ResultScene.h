@@ -34,11 +34,11 @@ public:
 	}
 	void update(float dt);
 	void menuBackCallBack(Ref * pSender);
-	int calScoreValue(int perfect, int great, int good, int miss, int allNotesNum) {
+	double calScoreValue(int perfect, int great, int good, int miss, int allNotesNum) {
 		double value;
 		value = perfect * 1.0 + great * 0.7 + good * 0.5;
 		value /= allNotesNum;
-		return static_cast<int>(value);
+		return value;
 	}
 	ResultScene() {}
 

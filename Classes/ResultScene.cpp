@@ -19,10 +19,16 @@ void ResultScene::update(float dt) {
 	this->addChild(scoreLabel);
 
 	int rank;
-	// TODO: allNotes是一个队列，装着这首歌的所有音符的消息
-	 TODO : int allNoteNum = game.allNotes.size();
+	// allNotes是一个队列，装着这首歌的所有音符的消息
+	// BUG : 不知道为什么这里的size()会返回0
+	// int allNoteNum = game.allNotes.size();
 
-	int scoreValue = calScoreValue(game.judgeCount[PERFECT], game.judgeCount[GREAT], game.judgeCount[GOOD], game.judgeCount[MISS], allNoteNum);
+	int allNoteNum = 0;
+	for(int i = 1; i < JUDGE_NUM; ++i) {
+		allNoteNum += game.judgeCount[i];
+	}
+
+	double scoreValue = calScoreValue(game.judgeCount[PERFECT], game.judgeCount[GREAT], game.judgeCount[GOOD], game.judgeCount[MISS], allNoteNum);
 	if(game.judgeCount[MISS] == 0 && game.judgeCount[GOOD] == 0) {
 		rank = SS_RANK;
 	}
