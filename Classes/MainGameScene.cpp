@@ -358,6 +358,9 @@ bool MainGameScene::init()
 			if (judgeFlag == false)
 			{
 				this->comboNumber = 0;
+				// 2018.11.30 10:48 lxs:
+				// 漏打也要算miss
+				this->game.judgeCount[MISS]++;
 			}
 			comboNumberLabel->removeFromParent();
 			this->comboNumberLabel = Label::createWithSystemFont(to_string(this->comboNumber), "Arial", 30);
