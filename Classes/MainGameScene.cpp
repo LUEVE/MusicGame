@@ -150,6 +150,7 @@ bool MainGameScene::init()
 		return false;
 	}
 
+	// background
 	auto mainGame_bg = Sprite::create("mainGame_bg.png");
 	mainGame_bg->setAnchorPoint(Vec2(0, 0));
 	mainGame_bg->setPosition(Vec2(0, 0));
@@ -157,6 +158,14 @@ bool MainGameScene::init()
 
 	auto sae = CocosDenshion::SimpleAudioEngine::getInstance();
 
+	// preload sound resource
+	sae->preloadBackgroundMusic("Wiwi Kuan- Made in PixiTracker.mp3");
+	sae->preloadEffect("MusicEffect\\Effect_cai.mp3");
+	sae->preloadEffect("MusicEffect\\Effect_ruo.mp3");
+	sae->preloadEffect("MusicEffect\\Effect_xing.mp3");
+	sae->preloadEffect("MusicEffect\\Effect_qiang.mp3");
+
+	// Play music
 	sae->stopBackgroundMusic();
 	sae->playBackgroundMusic("Wiwi Kuan- Made in PixiTracker.mp3",false);
 
