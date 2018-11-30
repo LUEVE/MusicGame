@@ -280,8 +280,8 @@ bool MainGameScene::init()
 					break;
 
 				}
-				 else if(dist((*it)->getPosition(), judges[which]->getPosition()) <= SG_Game::GREATPLACE && dist((*it)->getPosition(), judges[which]->getPosition()) >= SG_Game::PERFECTPLACE) // perfect
-				 {
+				else if(dist((*it)->getPosition(), judges[which]->getPosition()) <= SG_Game::GREATPLACE && dist((*it)->getPosition(), judges[which]->getPosition()) >= SG_Game::PERFECTPLACE) // perfect
+				{
 					 CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("MusicEffect\\Effect_xing.mp3");
 					 auto animation = Animation::create();
 					 setJudgeAnimation(animation,2);
