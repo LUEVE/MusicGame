@@ -27,10 +27,10 @@ bool AboutScene::init()
 	menu0->setPosition(Vec2::ZERO);
 	this->addChild(menu0);
 
-	auto sprite_pay = Sprite::create("pay.png");
+	auto sprite_pay = Sprite::create("About\\pay.png");
 	sprite_pay->setPosition(visibleSize.width / 2 - 200, visibleSize.height / 2);
 	this->addChild(sprite_pay, 1);
-	auto sprite_pay2 = Sprite::create("pay2.png");
+	auto sprite_pay2 = Sprite::create("About\\pay2.png");
 	sprite_pay2->setPosition(visibleSize.width / 2 + 200, visibleSize.height / 2);
 	this->addChild(sprite_pay2, 1);
 

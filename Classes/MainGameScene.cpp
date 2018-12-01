@@ -6,9 +6,35 @@
 #include "Block/SG_Action.h"
 #include "ResultScene.h"
 USING_NS_CC;
-MainGameScene::MainGameScene(): Scene(), scoreIfs("D:\\score.txt"){}
 
-//testScene::testScene() : Scene(), scoreIfs("D:\\score.txt") {}
+string MainGameScene::bgmSongName;
+string MainGameScene::pureSongName;
+MainGameScene::MainGameScene(): scoreIfs(".\\傻吊.txt"){}
+MainGameScene::MainGameScene(string songName) : scoreIfs(".\\MusicScore\\" + songName + ".txt")
+{
+	bgmSongName = "MusicList\\"+songName + ".mp3";
+	pureSongName = songName;
+};
+MainGameScene* MainGameScene::create(string songName)
+{
+	
+		MainGameScene *pRet = new(std::nothrow) MainGameScene(songName); 
+		if (pRet && pRet->init()) 
+		{ 
+			pRet->autorelease(); 
+			return pRet; 
+		} 
+		else 
+		{ 
+			delete pRet; 
+			pRet = nullptr; 
+			return nullptr; 
+		} 
+}
+
+
+
+
 Scene* MainGameScene::createScene()
 {
 	return MainGameScene::create();
@@ -66,21 +92,21 @@ void MainGameScene::update(float dt)
 	if(comboNumber < game.COMBOSTATE_ONE_NUM)
 	{
 		comboPlace->removeFromParent();
-		comboPlace = SG_Note::create("combo1.PNG");
+		comboPlace = SG_Note::create("ComboResources\\combo1_1.PNG");
 		comboPlace->setPosition(Vec2(visibleSize.width / 6 * 4, visibleSize.height / 6 * 1));
 		this->addChild(comboPlace);
 	}
 	else if(comboNumber >= game.COMBOSTATE_ONE_NUM && comboNumber <= game.COMBOSTATE_TWO_NUM)
 	{
 		comboPlace->removeFromParent();
-		comboPlace = SG_Note::create("combo2.PNG");
+		comboPlace = SG_Note::create("ComboResources\\combo1_2.PNG");
 		comboPlace->setPosition(Vec2(visibleSize.width / 6 * 4, visibleSize.height / 6 * 1));
 		this->addChild(comboPlace);
 	}
 	else
 	{
 		comboPlace->removeFromParent();
-		comboPlace = SG_Note::create("combo3.PNG");
+		comboPlace = SG_Note::create("ComboResources\\combo1_3.PNG");
 		comboPlace->setPosition(Vec2(visibleSize.width / 6 * 4, visibleSize.height / 6 * 1));
 		this->addChild(comboPlace);
 	}
@@ -149,6 +175,10 @@ bool MainGameScene::init()
 
 	sae->stopBackgroundMusic();
 	sae->playBackgroundMusic(bgmSongName.c_str(), false);
+	// lyw--
+	auto t = CocosDenshion::SimpleAudioEngine::getInstance()->getBackgroundMusicVolume();
+	log("%lf", t);
+	//lyw
 	// allnote in song push in scene
 
 	int judgeTime, whichWay, speed, type;
@@ -158,7 +188,7 @@ bool MainGameScene::init()
 	}
 	// combo
 	this->comboNumber = 0;
-	comboPlace = SG_Note::create("combo1.PNG");
+	comboPlace = SG_Note::create("ComboResources\\combo1_1.PNG");
 	comboPlace->setPosition(Vec2(visibleSize.width / 6 * 4, visibleSize.height / 6 * 1));
 	this->addChild(comboPlace);
 	string s_comboNumber = to_string(comboNumber);
@@ -323,8 +353,8 @@ bool MainGameScene::init()
 			reFreshComboLebal();
 			// 刷新分数
 			reFreshGameScoreLabel(addedScore);
-			SG_Action::setVisibleSize(visibleSize);
 			// 调用增加分数的actiona
+			SG_Action::setVisibleSize(visibleSize);
 			this->addedGameScoreLabel->runAction(SG_Action::addScoreAction());
 		};
 
@@ -357,7 +387,7 @@ bool MainGameScene::init()
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listen1, this);
 
 
-	// lyw--
+
 
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 

@@ -120,7 +120,7 @@ void StartScene::menuStartCallback(Ref* pSender)
 {
 	log("Start Button");
 	auto selectScene = SelectScene::createScene();
-	auto maingameScene = MainGameScene::createScene();
+	//auto maingameScene = MainGameScene::createScene();
 	Director::getInstance()->pushScene(TransitionFadeUp::create(0.5,selectScene));
 }
 

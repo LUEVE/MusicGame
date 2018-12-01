@@ -1,4 +1,4 @@
-#ifndef __SELECT_SCENE_H__
+ï»¿#ifndef __SELECT_SCENE_H__
 #define __SELECT_SCENE_H__
 
 #include "cocos2d.h"
@@ -24,7 +24,8 @@ public:
 	static cocos2d::Scene* createScene();
 	CREATE_FUNC(SelectScene);
 	
-	struct songs {
+
+	struct Songs {
 		string name;
 		string author;
 	};
@@ -32,24 +33,24 @@ public:
 	int size;
 	vector<string> files;
 	vector<string> filenames;
-	vector<songs> song;
+	vector<Songs> song;
 	void getFileNames(string path, vector<string>& files);
 	void getMessages();
 
 	void btnBackCallback(Ref * pSender);
 	void btnStartCallback(Ref * pSender);
 
-	//¼Ì³ĞÓÚCCTableViewDataSource
-	virtual Size tableCellSizeForIndex(TableView* table, ssize_t idx);         //¸ù¾İidxÀ´ÉèÖÃÃ¿ÏîcellµÄ³ß´ç´óĞ¡
-	virtual TableViewCell* tableCellAtIndex(TableView *table, ssize_t idx);    //»ñÈ¡±àºÅÎªidxµÄcell
-	virtual ssize_t numberOfCellsInTableView(TableView *table);                //Ò»¹²¶àÉÙÏîcell
-	virtual void tableCellHighlight(TableView* table, TableViewCell* cell);    //°´ÏÂÈ¥µÄÊ±ºò,¸ßÁÁÏÔÊ¾
-	virtual void tableCellUnhighlight(TableView* table, TableViewCell* cell);  //ËÉ¿ªÊ±È¡Ïû¸ßÁÁ
+	//ç»§æ‰¿äºCCTableViewDataSource
+	virtual Size tableCellSizeForIndex(TableView* table, ssize_t idx);         //æ ¹æ®idxæ¥è®¾ç½®æ¯é¡¹cellçš„å°ºå¯¸å¤§å°
+	virtual TableViewCell* tableCellAtIndex(TableView *table, ssize_t idx);    //è·å–ç¼–å·ä¸ºidxçš„cell
+	virtual ssize_t numberOfCellsInTableView(TableView *table);                //ä¸€å…±å¤šå°‘é¡¹cell
+	virtual void tableCellHighlight(TableView* table, TableViewCell* cell);    //æŒ‰ä¸‹å»çš„æ—¶å€™,é«˜äº®æ˜¾ç¤º
+	virtual void tableCellUnhighlight(TableView* table, TableViewCell* cell);  //æ¾å¼€æ—¶å–æ¶ˆé«˜äº®
 	
-	//¼Ì³ĞÓÚCCTableViewDelegate
-	virtual void tableCellTouched(TableView* table, TableViewCell* cell);          //Ä³Ïîcell±»µã»÷Ê±»Øµ÷º¯Êı
-	virtual void scrollViewDidScroll(cocos2d::extension::ScrollView* view);        //¹ö¶¯Ê±»Øµ÷º¯Êı
-	virtual void scrollViewDidZoom(cocos2d::extension::ScrollView* view);          //·ÅËõÊ±»Øµ÷º¯Êı
+	//ç»§æ‰¿äºCCTableViewDelegate
+	virtual void tableCellTouched(TableView* table, TableViewCell* cell);          //æŸé¡¹cellè¢«ç‚¹å‡»æ—¶å›è°ƒå‡½æ•°
+	virtual void scrollViewDidScroll(cocos2d::extension::ScrollView* view);        //æ»šåŠ¨æ—¶å›è°ƒå‡½æ•°
+	virtual void scrollViewDidZoom(cocos2d::extension::ScrollView* view);          //æ”¾ç¼©æ—¶å›è°ƒå‡½æ•°
 
 };
 

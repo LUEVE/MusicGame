@@ -1,5 +1,7 @@
-#include "SelectScene.h"
+ï»¿#include "SelectScene.h"
 #include "SimpleAudioEngine.h"
+#include <direct.h>
+#include "MainGameScene.h"
 
 USING_NS_CC;
 
@@ -48,12 +50,12 @@ bool SelectScene::init()
 	tableView->setPosition(ccp(visibleSize.width / 2, origin.y + 100));
 	this->addChild(tableView); 
 
-	//ÊôĞÔÉèÖÃ
-	tableView->setBounceable(true);                              //¿ªÆôµ¯ĞÔĞ§¹û
-	tableView->setDirection(cocos2d::extension::ScrollView::Direction::VERTICAL);  //×İÏò
-	tableView->setDelegate(this);								  //Î¯ÍĞ´úÀí
-	tableView->setVerticalFillOrder(TableView::VerticalFillOrder::TOP_DOWN);  //´ÓidĞ¡µÄ¿ªÊ¼ÅÅÁĞ
-	tableView->reloadData();									  //¼ÓÔØÊı¾İ
+	//å±æ€§è®¾ç½®
+	tableView->setBounceable(true);                              //å¼€å¯å¼¹æ€§æ•ˆæœ
+	tableView->setDirection(cocos2d::extension::ScrollView::Direction::VERTICAL);  //çºµå‘
+	tableView->setDelegate(this);								  //å§”æ‰˜ä»£ç†
+	tableView->setVerticalFillOrder(TableView::VerticalFillOrder::TOP_DOWN);  //ä»idå°çš„å¼€å§‹æ’åˆ—
+	tableView->reloadData();									  //åŠ è½½æ•°æ®
 
 	return true;
 }
@@ -71,34 +73,34 @@ TableViewCell* SelectScene::tableCellAtIndex(TableView* table, ssize_t idx)
 {
 	string message = song[idx].name;
 	
-	TableViewCell* cell = table->dequeueCell();  //³ö¶ÓÁĞ
+	TableViewCell* cell = table->dequeueCell();  //å‡ºé˜Ÿåˆ—
 
-	//Î´µ½½áÎ²Ò»Ö±È¡
+	//æœªåˆ°ç»“å°¾ä¸€ç›´å–
 	if (!cell) {
 		cell = new TableViewCell();
-		cell->autorelease();  //×Ô¶¯ÊÍ·Å×ÊÔ´
+		cell->autorelease();  //è‡ªåŠ¨é‡Šæ”¾èµ„æº
 
-		//Ìí¼ÓÒ»¸ö¾«ÁéÍ¼Æ¬
+		//æ·»åŠ ä¸€ä¸ªç²¾çµå›¾ç‰‡
 		Sprite* cellSprite = Sprite::create("song_unselected.png");
-		cellSprite->setAnchorPoint(Point::ZERO);  //ÉèÖÃÃèµãÎª×óÏÂ½Ç
+		cellSprite->setAnchorPoint(Point::ZERO);  //è®¾ç½®æç‚¹ä¸ºå·¦ä¸‹è§’
 		cellSprite->setPosition(ccp(0, 0));
 		cellSprite->setOpacity(150);
-		cellSprite->setTag(1);  //ÉèÖÃ±êÇ©
+		cellSprite->setTag(1);  //è®¾ç½®æ ‡ç­¾
 		cell->addChild(cellSprite,0,1);
 
-		//Ìí¼ÓÒ»¸ölabel±êÇ©
+		//æ·»åŠ ä¸€ä¸ªlabelæ ‡ç­¾
 		LabelTTF* label = LabelTTF::create(message, "Georgia-BoldItalic", 40);
 		label->setPosition(cellSprite->getContentSize().width / 2, cellSprite->getContentSize().height / 2);
 		label->setTag(2);
 		cellSprite->addChild(label, 0, 2);
 	}
 	else {
-		//¸ü»»¾«ÁéÍ¼Æ¬£¬Ê¹ÓÃÎÆÀí
+		//æ›´æ¢ç²¾çµå›¾ç‰‡ï¼Œä½¿ç”¨çº¹ç†
 		Texture2D* texture = TextureCache::sharedTextureCache()->addImage("song_unselected.png");
 		Sprite* pSprite = (Sprite*)cell->getChildByTag(1);
 		pSprite->setTexture(texture);
 
-		//¸ü¸ÄÍ¼Æ¬±àºÅ
+		//æ›´æ”¹å›¾ç‰‡ç¼–å·
 		LabelTTF* pLabel = (LabelTTF*)pSprite->getChildByTag(2);
 		pLabel->setString(message);
 	}
@@ -106,32 +108,34 @@ TableViewCell* SelectScene::tableCellAtIndex(TableView* table, ssize_t idx)
 	return cell;
 }
 
-//¸ù¾İidxÀ´ÉèÖÃÃ¿ÏîcellµÄ³ß´ç´óĞ¡
+//æ ¹æ®idxæ¥è®¾ç½®æ¯é¡¹cellçš„å°ºå¯¸å¤§å°
 Size SelectScene::tableCellSizeForIndex(TableView* table, ssize_t idx)
 {
 	return CCSizeMake(512, 65);
 }
 
-//Ò»¹²¶àÉÙÏîcell
+//ä¸€å…±å¤šå°‘é¡¹cell
 ssize_t SelectScene::numberOfCellsInTableView(TableView* table)
 {
-	return 10;
+	return this->files.size();
 }
 
-//Ä³Ïîcell±»µã»÷Ê±»Øµ÷º¯Êı
+//æŸé¡¹cellè¢«ç‚¹å‡»æ—¶å›è°ƒå‡½æ•°
 void SelectScene::tableCellTouched(TableView* table, TableViewCell* cell)
 {
 	ssize_t id = cell->getIdx();
 	char bg[20];
 	sprintf(bg, "./song_bg/song%d.jpg", id % 3 + 1);
-	log("cell touched at index: %i", id); //¿ØÖÆÌ¨Êä³ö
-	Blink *blink_ = Blink::create(0.5f, 1);  //Í¼Æ¬ÉÁË¸
+	log("cell touched at index: %i", id); //æ§åˆ¶å°è¾“å‡º
+	Blink *blink_ = Blink::create(0.5f, 1);  //å›¾ç‰‡é—ªçƒ
 	cell->runAction(blink_);
-
-	//»»±³¾°Í¼Æ¬
+	log("%s", song[id].name);
+	//æ¢èƒŒæ™¯å›¾ç‰‡
 	Sprite* replace = (Sprite*)this->getChildByTag(123);
 	Texture2D* rTexture = TextureCache::sharedTextureCache()->addImage(bg);
 	replace->setTexture(rTexture);
+	auto mainGameScene = MainGameScene::create(song[id].name);
+	Director::getInstance()->pushScene(mainGameScene);
 }
 
 void SelectScene::tableCellHighlight(TableView* table, TableViewCell* cell) {
@@ -148,24 +152,24 @@ void SelectScene::tableCellUnhighlight(TableView* table, TableViewCell* cell) {
 	pSprite->setTexture(aTexture);
 }
 
-//¹ö¶¯Ê±»Øµ÷º¯Êı
+//æ»šåŠ¨æ—¶å›è°ƒå‡½æ•°
 void SelectScene::scrollViewDidScroll(cocos2d::extension::ScrollView* view) { } 
-//·ÅËõÊ±»Øµ÷º¯Êı
+//æ”¾ç¼©æ—¶å›è°ƒå‡½æ•°
 void SelectScene::scrollViewDidZoom(cocos2d::extension::ScrollView* view) { }   
 
 void SelectScene::getFileNames(string path, vector<string>& files)
 {
-	//ÎÄ¼ş¾ä±ú  
+	//æ–‡ä»¶å¥æŸ„  
 	long hFile = 0;
-	//ÎÄ¼şĞÅÏ¢  
+	//æ–‡ä»¶ä¿¡æ¯  
 	struct _finddata_t fileinfo;
 	string p;
 	if ((hFile = _findfirst(p.assign(path).append("\\*").c_str(), &fileinfo)) != -1)
 	{
 		do
 		{
-			//Èç¹ûÊÇÄ¿Â¼,µü´úÖ®  
-			//Èç¹û²»ÊÇ,¼ÓÈëÁĞ±í  
+			//å¦‚æœæ˜¯ç›®å½•,è¿­ä»£ä¹‹  
+			//å¦‚æœä¸æ˜¯,åŠ å…¥åˆ—è¡¨  
 			if ((fileinfo.attrib &  _A_SUBDIR))
 			{
 				if (strcmp(fileinfo.name, ".") != 0 && strcmp(fileinfo.name, "..") != 0)
@@ -181,8 +185,11 @@ void SelectScene::getFileNames(string path, vector<string>& files)
 }
 
 void SelectScene::getMessages() {
-	char * filePath = "F:\\MusicGame\\Resources\\song_message";
-	//»ñÈ¡¸ÃÂ·¾¶ÏÂµÄËùÓĞÎÄ¼ş  
+	//char   buffer[MAX_PATH];
+	//getcwd(buffer, MAX_PATH);
+
+	char * filePath = ".\\SongInformation";
+	//è·å–è¯¥è·¯å¾„ä¸‹çš„æ‰€æœ‰æ–‡ä»¶  
 	getFileNames(filePath, files);
 	size = files.size();
 	vector<string> temp_filenames(size);
@@ -192,7 +199,7 @@ void SelectScene::getMessages() {
 	}
 	filenames = temp_filenames;
 
-	vector<songs> temp_song(size);
+	vector<Songs> temp_song(size);
 	for (int i = 0; i < size; i++) {
 		ifstream in(filenames[i]);
 		string line;

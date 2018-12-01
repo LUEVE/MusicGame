@@ -30,10 +30,12 @@ public:
 	Size visibleSize;
 
 	MainGameScene();
+	MainGameScene(string songName);
 	CREATE_FUNC(MainGameScene);
+	static MainGameScene* create(string songName);
 
-
-	string bgmSongName = "Wiwi Kuan- Made in PixiTracker.mp3";
+	static string bgmSongName;
+	static string pureSongName;  // 歌曲名字不包含 .txt .mp3 之列后缀
 	vector<string> musicEffect = {"MusicEffect\\Effect_cai.mp3","MusicEffect\\Effect_ruo.mp3","MusicEffect\\Effect_xing.mp3","MusicEffect\\Effect_qiang.mp3"};
 	void preloadSoundResource(CocosDenshion::SimpleAudioEngine* sae);
 	virtual bool init();

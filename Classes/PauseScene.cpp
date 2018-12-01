@@ -125,5 +125,14 @@ void PauseScene::menuRestartCallback(cocos2d::Ref* pSender)
 {
 	log("ReStart Button");
 	Director::getInstance()->popScene();
-	Director::sharedDirector()->replaceScene(MainGameScene::createScene());
+	if (MainGameScene::bgmSongName.empty())
+	{
+		Director::sharedDirector()->replaceScene(MainGameScene::createScene());
+	}
+	else
+	{
+		auto mainGameScene = MainGameScene::create(MainGameScene::pureSongName);
+		Director::sharedDirector()->replaceScene(mainGameScene);
+	}
+
 }
