@@ -13,10 +13,13 @@ public:
 
 	virtual bool init();
 
-	void btnBackCallback(Ref * pSender);
-	void fuck(Ref* sender, CheckBox::EventType type);
+	void menuBackCallBack(Ref *pSender);
+
+	void SliderBGMCallBack(Ref *pSender, Slider::EventType type);
+	void SliderEffectCallBack(Ref *pSender, Slider::EventType type);
 
 	CREATE_FUNC(SettingScene);
+
 };
 
 #endif // __SETTING_SCENE_H__

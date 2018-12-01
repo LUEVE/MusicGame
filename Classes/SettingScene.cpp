@@ -1,21 +1,14 @@
 ﻿#include "SettingScene.h"
 #include "SimpleAudioEngine.h"
 
+using namespace CocosDenshion;
+
 USING_NS_CC;
 
 Scene* SettingScene::createScene()
 {
 	return SettingScene::create();
 }
-
-
-static cocos2d::Size designResolutionSize = cocos2d::Size(1024, 768);
-static cocos2d::Size smallResolutionSize = cocos2d::Size(480, 320);
-static cocos2d::Size mediumResolutionSize = cocos2d::Size(1024, 768);
-//static cocos2d::Size largeResolutionSize = cocos2d::Size(2048, 1536);
-static cocos2d::Size largeResolutionSize = cocos2d::Size(1920, 1080);
-
-
 
 
 bool SettingScene::init()
@@ -28,52 +21,167 @@ bool SettingScene::init()
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	auto backButton = Button::create("back.png", "back_selected.png", "back_disabled.png");
-	//backButton->setPosition(Vec2(250, 250));
-	backButton->addClickEventListener(CC_CALLBACK_1(SettingScene::btnBackCallback, this));
-	this->addChild(backButton);
-
-	auto fullScreenCheckbox = CheckBox::create("check_box_normal.png",
-		"check_box_normal_press.png",
-		"check_box_active.png",
-		"check_box_normal_disable.png",
-		"check_box_active_disable.png");
+	// backbutton
+	auto sprite_back = Sprite::create("back.png");
+	auto sprite_backselected = Sprite::create("back_selected.png");
+	auto menuBackItem = MenuItemSprite::create(sprite_back, sprite_backselected, sprite_back, CC_CALLBACK_1(SettingScene::menuBackCallBack, this));
+	menuBackItem->setPosition(Vec2(30, visibleSize.height - 30));
+	auto menu0 = Menu::create(menuBackItem, NULL);
+	menu0->setPosition(Vec2::ZERO);
+	this->addChild(menu0);
 
 
+	auto userdata = UserDefault::sharedUserDefault();
 
-
-	fullScreenCheckbox->addEventListener([&](Ref* sender, CheckBox::EventType type) {
-		Size frameSize;
-		
-		switch (type)
+	/* Set background music volume */
+	// label
+	auto volumeLabel = Label::createWithSystemFont("Music Volume", "Arial", 24);
+	volumeLabel->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2 + 60));
+	this->addChild(volumeLabel);
+	// slider
+	auto slider_bgm = Slider::create();
+	slider_bgm->loadBarTexture("Slider_Back.png");
+	slider_bgm->loadSlidBallTextures("SliderNode_Normal.png", "SliderNode_Press.png", "SliderNode_Disable.png");
+	slider_bgm->loadProgressBarTexture("Slider_PressBar.png");
+	slider_bgm->setPosition(Vec2(visibleSize.width / 2 + 10, visibleSize.height / 2 + 30));
+	slider_bgm->setPercent(SimpleAudioEngine::getInstance()->getBackgroundMusicVolume() * 100.0f);
+	slider_bgm->addEventListener(CC_CALLBACK_2(SettingScene::SliderBGMCallBack, this));
+	this->addChild(slider_bgm);
+	// On/Off button
+	auto musicOnItem = MenuItemImage::create("volume_on.png", "volume_on.png");
+	musicOnItem->setUserData((void *)"ON");
+	auto musicOffItem = MenuItemImage::create("volume_off.png", "volume_off.png");
+	musicOffItem->setUserData((void *)"OFF");
+	auto menuToggle = MenuItemToggle::createWithCallback([=](Ref* obj) {
+		MenuItemFont *item = (MenuItemFont*)((MenuItemToggle *)obj)->getSelectedItem();
+		char* musicState = (char*)item->getUserData();
+		if (musicState == "ON")
 		{
-		case cocos2d::ui::CheckBox::EventType::SELECTED:
-			// Director::getInstance()->getOpenGLView()->setDesignResolutionSize(largeResolutionSize.width, largeResolutionSize.height, ResolutionPolicy::EXACT_FIT);
-			 Director::getInstance()->getOpenGLView()->setFullscreen();
+			SimpleAudioEngine::getInstance()->setBackgroundMusicVolume(userdata->getFloatForKey("backgroundmusic"));
+			slider_bgm->setPercent(userdata->getFloatForKey("backgroundmusic") * 100.0f);
+			slider_bgm->setColor(Color3B(255, 255, 255));
+			slider_bgm->setEnabled(true);
+			userdata->setBoolForKey("backgroundmusic_on", true);
+		}
+		else if(musicState == "OFF"){
+			SimpleAudioEngine::getInstance()->setBackgroundMusicVolume(0.0f);
+			slider_bgm->setPercent(0);
+			slider_bgm->setColor(cocos2d::Color3B::GRAY);
+			slider_bgm->setEnabled(false);
+			userdata->setBoolForKey("backgroundmusic_on", false);
+		}
+	}, musicOnItem, musicOffItem, NULL);
+	if (userdata->getBoolForKey("backgroundmusic_on") == false) {
+		menuToggle->setSelectedIndex(1);
+		slider_bgm->setEnabled(false);
+	}
+	else
+	{
+		menuToggle->setSelectedIndex(0);
+		slider_bgm->setEnabled(true);
+	}
+	menuToggle->setPosition(visibleSize.width / 2 - 80, visibleSize.height / 2 + 30);
+	auto menu = Menu::create(menuToggle, NULL);
+	menu->setPosition(Point::ZERO);
+	this->addChild(menu, 5);
 
-			break;
-		case cocos2d::ui::CheckBox::EventType::UNSELECTED:
-			//Director::getInstance()->getOpenGLView()->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::EXACT_FIT);
-			Director::getInstance()->getOpenGLView()->setWindowed(designResolutionSize.width, designResolutionSize.height);
+
+	/* Set sound effect volume */
+	// label
+	auto volumeLabel2 = Label::createWithSystemFont("Sound Effect Volume", "Arial", 24);
+	volumeLabel2->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2 - 30));
+	this->addChild(volumeLabel2);
+	// slider
+	auto slider_eff = Slider::create();
+	slider_eff->loadBarTexture("Slider_Back.png");
+	slider_eff->loadSlidBallTextures("SliderNode_Normal.png", "SliderNode_Press.png", "SliderNode_Disable.png");
+	slider_eff->loadProgressBarTexture("Slider_PressBar.png");
+	slider_eff->setPosition(Vec2(visibleSize.width / 2 + 10, visibleSize.height / 2 - 60));
+	slider_eff->setPercent(SimpleAudioEngine::getInstance()->getEffectsVolume() * 100.0f);
+	slider_eff->addEventListener(CC_CALLBACK_2(SettingScene::SliderEffectCallBack, this));
+	this->addChild(slider_eff);
+	// On/Off button
+	auto musicOnItem2 = MenuItemImage::create("volume_on.png", "volume_on.png");
+	musicOnItem2->setUserData((void *)"ON");
+	auto musicOffItem2 = MenuItemImage::create("volume_off.png", "volume_off.png");
+	musicOffItem2->setUserData((void *)"OFF");
+	auto menuToggle2 = MenuItemToggle::createWithCallback([=](Ref* obj) {
+		MenuItemFont *item = (MenuItemFont*)((MenuItemToggle *)obj)->getSelectedItem();
+		char* musicState = (char*)item->getUserData();
+		if (musicState == "ON")
+		{
+			SimpleAudioEngine::getInstance()->setEffectsVolume(userdata->getFloatForKey("soundeffect"));
+			slider_eff->setPercent(userdata->getFloatForKey("soundeffect") * 100.0f);
+			slider_eff->setColor(Color3B(255, 255, 255));
+			slider_eff->setEnabled(true);
+			userdata->setBoolForKey("soundeffect_on", true);
+		}
+		else if (musicState == "OFF") {
+			SimpleAudioEngine::getInstance()->setEffectsVolume(0.0f);
+			slider_eff->setPercent(0);
+			slider_eff->setColor(cocos2d::Color3B::GRAY);
+			slider_eff->setEnabled(false);
+			userdata->setBoolForKey("soundeffect_on", false);
+		}
+	}, musicOnItem2, musicOffItem2, NULL);
+	if (userdata->getBoolForKey("soundeffect_on") == false) {
+		menuToggle2->setSelectedIndex(1);
+		slider_eff->setEnabled(false);
+	}
+	else
+	{
+		menuToggle2->setSelectedIndex(0);
+		slider_eff->setEnabled(true);
+	}
+	menuToggle2->setPosition(visibleSize.width / 2 - 80, visibleSize.height / 2 - 60);
+	auto menu2 = Menu::create(menuToggle2, NULL);
+	menu2->setPosition(Point::ZERO);
+	this->addChild(menu2, 5);
+
+
+	// Keyboard listen ESC
+	auto listen1 = EventListenerKeyboard::create();
+
+	listen1->onKeyPressed = [=](EventKeyboard::KeyCode keyCode, Event * event) {
+		switch (keyCode)
+		{
+		case EventKeyboard::KeyCode::KEY_ESCAPE:
+			Director::getInstance()->popScene();
 			break;
 		default:
 			break;
 		}
-	});
-	fullScreenCheckbox->setPosition(Vec2(visibleSize.width / 2 - 50, visibleSize.height / 2));
-	this->addChild(fullScreenCheckbox);
-
-	auto fullScreenText = Text::create("Full-Screen", "Arial", 24);
-
-
-	fullScreenText->setPosition(Vec2(visibleSize.width / 2 + 50, visibleSize.height / 2));
-	this->addChild(fullScreenText);
+	};
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listen1, this);
 
 	return true;
 }
 
-void SettingScene::btnBackCallback(Ref* pSender)
+void SettingScene::menuBackCallBack(Ref * pSender)
 {
 	Director::getInstance()->popScene();
 }
 
+void SettingScene::SliderBGMCallBack(Ref *pSender, Slider::EventType type) {
+	auto item = (Slider*)(pSender);
+	log("%i", item->getPercent());
+	if (item->getPercent() == 100) {
+		//item->setEnabled(false);
+	}
+	else {
+		SimpleAudioEngine::getInstance()->setBackgroundMusicVolume(item->getPercent() / 100.0f);
+		UserDefault::sharedUserDefault()->setFloatForKey("backgroundmusic", item->getPercent() / 100.0f);
+	}
+}
+
+void SettingScene::SliderEffectCallBack(Ref *pSender, Slider::EventType type) {
+	auto item = (Slider*)(pSender);
+	log("%i", item->getPercent());
+	if (item->getPercent() == 100) {
+		//item->setEnabled(false);
+	}
+	else {
+		SimpleAudioEngine::getInstance()->setEffectsVolume(item->getPercent() / 100.0f);
+		UserDefault::sharedUserDefault()->setFloatForKey("soundeffect", item->getPercent() / 100.0f);
+	}
+}

@@ -48,6 +48,21 @@
     <ClCompile Include="..\Classes\Block\SG_Game.cpp">
       <Filter>src\block</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\PauseScene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\ResultScene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\GeneratorScene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\testScene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Block\SG_Action.cpp">
+      <Filter>src\block</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -80,6 +95,24 @@
     <ClInclude Include="..\Classes\Block\SG_Game.h">
       <Filter>src\block</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\PauseScene.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ResultScene.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\GeneratorScene.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\testScene.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Block\SG_NoteInfo.h">
+      <Filter>src\block</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Block\SG_Action.h">
+      <Filter>src\block</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">
@@ -87,7 +120,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\Resources\f91.jpg" />
     <Image Include="..\Resources\white.jpg" />
   </ItemGroup>
 </Project>

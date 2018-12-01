@@ -13,7 +13,7 @@ public:
 
 	virtual bool init();
 
-	void btnBackCallback(Ref * pSender);
+	void menuBackCallBack(Ref * pSender);
 
 	CREATE_FUNC(AboutScene);
 };
