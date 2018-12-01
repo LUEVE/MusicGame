@@ -1,4 +1,4 @@
-#include "GeneratorScene.h"
+﻿#include "GeneratorScene.h"
 #include "ui/UIButton.h"
 #include "SimpleAudioEngine.h"
 #include "Block/SG_Note.h"
@@ -22,7 +22,7 @@ bool GeneratorScene::init()
 	auto sae = CocosDenshion::SimpleAudioEngine::getInstance();
 
 	sae->stopBackgroundMusic();
-	sae->playBackgroundMusic("Wiwi Kuan- Made in PixiTracker.mp3", true);
+	sae->playBackgroundMusic("Lyn - Beneath the Mask.mp3", true);
 	startPoint = steady_clock::now();
 
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
