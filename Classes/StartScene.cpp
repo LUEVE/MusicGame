@@ -134,8 +134,11 @@ void StartScene::menuSettingCallback(Ref* pSender)
 void StartScene::menuCreatorCallback(Ref* pSender)
 {
 	log("Creator Button");
-	auto creatorScene = GeneratorScene::create();
-	Director::getInstance()->pushScene(creatorScene);
+	//auto creatorScene = GeneratorScene::create();
+	//Director::getInstance()->pushScene(creatorScene);
+	auto selectScene = SelectScene::createScene("WaitToCreate");
+	//auto maingameScene = MainGameScene::createScene();
+	Director::getInstance()->pushScene(TransitionFadeUp::create(0.5, selectScene));
 }
 
 void StartScene::menuTestCallback(cocos2d::Ref * pSender)

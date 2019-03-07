@@ -12,6 +12,37 @@ Scene* SelectScene::createScene()
 	scene->addChild(layer);
 	return scene;
 }
+Scene* SelectScene::createScene(string _filePath)
+{
+	Scene *scene = Scene::create();
+	SelectScene *layer = SelectScene::create(_filePath);
+	scene->addChild(layer);
+	return scene;
+}
+SelectScene::SelectScene()
+{
+	
+}
+SelectScene::SelectScene(string _filePath): filePath(_filePath)
+{
+};
+//
+SelectScene* SelectScene::create(string _filePath)
+{
+
+	SelectScene *pRet = new(std::nothrow)SelectScene(_filePath);
+	if (pRet && pRet->init())
+	{
+		pRet->autorelease();
+		return pRet;
+	}
+	else
+	{
+		delete pRet;
+		pRet = nullptr;
+		return nullptr;
+	}
+}
 
 bool SelectScene::init()
 {
@@ -102,6 +133,7 @@ TableViewCell* SelectScene::tableCellAtIndex(TableView* table, ssize_t idx)
 
 		//更改图片编号
 		LabelTTF* pLabel = (LabelTTF*)pSprite->getChildByTag(2);
+		
 		pLabel->setString(message);
 	}
 
@@ -188,7 +220,7 @@ void SelectScene::getMessages() {
 	//char   buffer[MAX_PATH];
 	//getcwd(buffer, MAX_PATH);
 
-	char * filePath = ".\\SongInformation";
+	const char * filePath = (this->filePath).data();
 	//获取该路径下的所有文件  
 	getFileNames(filePath, files);
 	size = files.size();

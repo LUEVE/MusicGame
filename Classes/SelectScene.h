@@ -17,13 +17,16 @@ using namespace cocos2d::ui;
 #include <string>
 using namespace std;
 
-class SelectScene : public Layer, public TableViewDataSource, public TableViewDelegate{
+class SelectScene : public Layer, public TableViewDataSource, public TableViewDelegate {
 public:
 
 	virtual bool init();
-	static cocos2d::Scene* createScene();
 	CREATE_FUNC(SelectScene);
-	
+	static cocos2d::Scene* createScene();
+	static cocos2d::Scene* createScene(string _filePath);
+	SelectScene();
+	SelectScene(string filePath);
+	static SelectScene* SelectScene::create(string _filePath);
 
 	struct Songs {
 		string name;
@@ -31,6 +34,7 @@ public:
 	};
 
 	int size;
+	string filePath = ".\\SongInformation";
 	vector<string> files;
 	vector<string> filenames;
 	vector<Songs> song;

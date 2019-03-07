@@ -1,6 +1,5 @@
 ﻿#include "MainGameScene.h"
 #include "SimpleAudioEngine.h"
-// #include "Block/SG_BlockF91.h"
 #include "Block/SG_Note.h"
 #include "PauseScene.h"
 #include "Block/SG_Action.h"
@@ -38,6 +37,7 @@ MainGameScene* MainGameScene::create(string songName)
 Scene* MainGameScene::createScene()
 {
 	return MainGameScene::create();
+
 }
 
 Vector<Sprite*> AllSpirtInASong(6);

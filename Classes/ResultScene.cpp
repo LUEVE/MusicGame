@@ -91,19 +91,19 @@ bool ResultScene::init() {
 	menu0->setPosition(Vec2::ZERO);
 	this->addChild(menu0);
 
-	auto perfectSprite = SG_Note::create("perfect_result.png");
+	auto perfectSprite = SG_Note::create("Judge/perfect_result.png");
 	perfectSprite->setPosition(Vec2(visibleSize.width / 10 * 2, visibleSize.height / 10 * 7.5));
 	this->addChild(perfectSprite);
 
-	auto greatSprite = SG_Note::create("great_result.png");
+	auto greatSprite = SG_Note::create("Judge/great_result.png");
 	greatSprite->setPosition(Vec2(visibleSize.width / 10 * 2, visibleSize.height / 10 * 6));
 	this->addChild(greatSprite);
 
-	auto goodSprite = SG_Note::create("good_result.png");
+	auto goodSprite = SG_Note::create("Judge/good_result.png");
 	goodSprite->setPosition(Vec2(visibleSize.width / 10 * 2, visibleSize.height / 10 * 4.5));
 	this->addChild(goodSprite);
 	
-	auto missSprite = SG_Note::create("miss_result.png");
+	auto missSprite = SG_Note::create("Judge/miss_result.png");
 	missSprite->setPosition(Vec2(visibleSize.width / 10 * 2, visibleSize.height / 10 * 3));
 	this->addChild(missSprite);
 
